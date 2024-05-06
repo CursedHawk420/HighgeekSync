@@ -1,0 +1,15 @@
+<settings>
+  <servers>
+    <server>
+      <id>gitlab-maven</id>
+      <username>CursedHawk</username>
+      <password>glpat-pyNb_1zvJzACyUkvyFtk</password>
+      <configuration>
+        <authenticationInfo>
+          <userName>CursedHawk</userName>
+          <password>glpat-pyNb_1zvJzACyUkvyFtk</password>
+        </authenticationInfo>
+      </configuration>
+    </server>
+  </servers>
+</settings>
