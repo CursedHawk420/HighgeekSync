@@ -1,0 +1,14 @@
+name: HighgeekSync
+version: '${project.version}'
+main: eu.highgeek.highgeeksync.Main
+api-version: '1.20'
+authors: [CursedHawk420]
+website: highgeek.eu
+depend: [ DiscordSRV ]
+commands:
+  hg:
+    description: Main Highgeek Command
+    usage: /hg <args> <args>
+  vinv:
+    description: Default Virtual Inventory Command
+    usage: /vinv
