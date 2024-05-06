@@ -90,7 +90,6 @@
         </repository>
         <repository>
             <id>highgeek-maven</id>
-            <name>Highgeek Repository</name>
             <url>https://maven.highgeek.eu/LegionLocal</url>
         </repository>
     </repositories>

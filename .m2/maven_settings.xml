@@ -15,12 +15,6 @@
       <id>highgeek-maven</id>
       <username>admin</username>
       <password>yM+oDABOj3fUYD4K2Aw3nl3Q9+8DI7x1QnFaL/iyLR40KRZwtR5GZIUv5Ne/mp7O</password>
-      <configuration>
-        <authenticationInfo>
-          <userName>admin</userName>
-          <password>yM+oDABOj3fUYD4K2Aw3nl3Q9+8DI7x1QnFaL/iyLR40KRZwtR5GZIUv5Ne/mp7O</password>
-        </authenticationInfo>
-      </configuration>
     </server>
   </servers>
 </settings>
