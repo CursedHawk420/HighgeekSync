@@ -33,7 +33,7 @@ java-build-and-test:
       - .m2/repository
   script:
     # the 'verify' goal is definitely the most appropriate here
-    - mvn $MAVEN_CLI_OPTS verify -s ci_settings.xml'
+    - mvn $MAVEN_CLI_OPTS verify -s ci_settings.xml
   artifacts:
     name: "Maven artifacts from $CI_PROJECT_NAME on $CI_COMMIT_REF_SLUG"
     paths:
