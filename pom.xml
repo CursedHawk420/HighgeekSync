@@ -88,6 +88,11 @@
             <id>gitlab-maven</id>
             <url>https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven</url>
         </repository>
+        <repository>
+            <id>highgeek-maven</id>
+            <name>Highgeek Repository</name>
+            <url>https://maven.highgeek.eu/LegionLocal</url>
+        </repository>
     </repositories>
     <distributionManagement>
         <repository>
