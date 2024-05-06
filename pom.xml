@@ -53,10 +53,6 @@
 
     <repositories>
         <repository>
-            <id>gitlab-maven</id>
-            <url>https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven</url>
-        </repository>
-        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -88,6 +84,10 @@
             <id>maven-rosewwod</id>
             <url>https://repo.rosewooddev.io/repository/public/</url>
         </repository>-->
+        <repository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven</url>
+        </repository>
     </repositories>
     <distributionManagement>
         <repository>
@@ -102,7 +102,7 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
+            <artifactId>spigot</artifactId>
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -137,9 +137,8 @@
             <groupId>mineverse.chat</groupId>
             <artifactId>venturechat</artifactId>
             <version>3.7.1</version>
-            <systemPath>${project.basedir}/jars/VentureChat-3.7.1.jar</systemPath>
             <type>jar</type>
-            <scope>system</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

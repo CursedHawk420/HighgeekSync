@@ -10,8 +10,5 @@
         <module name="HighgeekSync" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="HighgeekSync" target="16" />
-    </bytecodeTargetLevel>
   </component>
 </project>
