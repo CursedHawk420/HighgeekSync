@@ -1,45 +1,27 @@
-variables:
-  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
-
 image: maven:latest
 
-stages:
-    - build
-    - test
-    - package
-    - deploy
-
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 cache:
   paths:
-    - .m2/repository
-    - target
+    - .m2/repository/
+    - target/
 
-build_job:
+build:
   stage: build
+  script:
+    - mvn $MAVEN_CLI_OPTS compile
 
-  script: 
-    - echo "Maven compile started"
-    - "mvn compile"
-
-
-test_job:
+test:
   stage: test
+  script:
+    - mvn $MAVEN_CLI_OPTS test
 
-  script: 
-    - echo "Maven test started"
-    - "mvn test"
-
-package_job:
-  stage: package
-
-  script: 
-    - echo "Maven packaging started"
-    - "mvn package"
-
-
-Deploy_job:
+deploy:
   stage: deploy
-
-  script: 
-    - echo "Maven deploy started"
+  script:
+    - mvn $MAVEN_CLI_OPTS deploy
+  only:
+    - main
