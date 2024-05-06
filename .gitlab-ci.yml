@@ -23,7 +23,7 @@ variables:
 
 java-build-and-test:
   # select the most appropriate image for your project
-  image: maven:3.9.6-openjdk-17
+  image: maven:3.9-openjdk-17
   stage: build
   # Cache downloaded dependencies and plugins between builds.
   # The key here separates one cache per branch/tag ($CI_COMMIT_REF_SLUG)
