@@ -69,6 +69,10 @@
       <id>gitlab-maven</id>
       <url>https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven</url>
     </repository>
+    <repository>
+      <id>highgeek-maven</id>
+      <url>https://maven.highgeek.eu/LegionLocal</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -84,6 +88,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>mineverse.chat</groupId>
+      <artifactId>venturechat</artifactId>
+      <version>3.7.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.30</version>
@@ -95,13 +105,6 @@
       <version>1.26.2</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/jars/DiscordSRV-Build-1.26.2.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>mineverse.chat</groupId>
-      <artifactId>venturechat</artifactId>
-      <version>1.26.2</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/jars/VentureChat-3.7.1.jar</systemPath>
     </dependency>
   </dependencies>
   <distributionManagement>
