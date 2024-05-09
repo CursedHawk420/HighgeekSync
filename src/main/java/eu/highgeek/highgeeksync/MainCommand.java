@@ -1,17 +1,16 @@
 package eu.highgeek.highgeeksync;
 
-import eu.highgeek.highgeeksync.util.ConfigManager;
-import eu.highgeek.highgeeksync.websync.inventory.VirtualInventoryManager;
-import eu.highgeek.highgeeksync.websync.objects.VirtualInventory;
+import static eu.highgeek.highgeeksync.MainManageData.*;
+
+import java.util.ArrayList;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-
-import static eu.highgeek.highgeeksync.MainManageData.inventoriesIds;
-import static eu.highgeek.highgeeksync.MainManageData.playerInventoriesHashMap;
+import eu.highgeek.highgeeksync.util.ConfigManager;
+import eu.highgeek.highgeeksync.websync.inventory.VirtualInventoryManager;
 
 public class MainCommand implements CommandExecutor {
     VirtualInventoryManager inventoryManagerer = new VirtualInventoryManager();

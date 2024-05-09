@@ -1,5 +1,16 @@
 package eu.highgeek.highgeeksync;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import eu.highgeek.highgeeksync.backup.BackupHandler;
 import eu.highgeek.highgeeksync.backup.CustomSyncSettings;
 import eu.highgeek.highgeeksync.listener.DeathListener;
@@ -7,15 +18,7 @@ import eu.highgeek.highgeeksync.mysql.ManageMySQLData;
 import eu.highgeek.highgeeksync.mysql.MySQL;
 import eu.highgeek.highgeeksync.util.ConfigManager;
 import eu.highgeek.highgeeksync.util.PlayerInventoryManager;
-import eu.highgeek.highgeeksync.websync.objects.CustomMap;
 import eu.highgeek.highgeeksync.websync.objects.VirtualInventory;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.sql.SQLException;
-import java.util.*;
 
 public class MainManageData {
 
