@@ -17,6 +17,21 @@
       <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="gitlab-maven" />
+      <option name="name" value="gitlab-maven" />
+      <option name="url" value="https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Maven Central repository" />
+      <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven-central" />
+      <option name="name" value="maven-central" />
+      <option name="url" value="https://repo1.maven.org/maven2/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="MG-Dev Jenkins CI Maven Repository" />
       <option name="name" value="MG-Dev Jenkins CI Maven Repository" />
       <option name="url" value="https://ci.mg-dev.eu/plugin/repository/everything" />
@@ -32,24 +47,9 @@
       <option name="url" value="https://repo.dmulloy2.net/repository/public/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="gitlab-maven" />
-      <option name="name" value="gitlab-maven" />
-      <option name="url" value="https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="central" />
-      <option name="name" value="Maven Central repository" />
-      <option name="url" value="https://repo1.maven.org/maven2" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="maven-central" />
-      <option name="name" value="maven-central" />
-      <option name="url" value="https://repo1.maven.org/maven2/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="minecraft-repo" />
@@ -60,6 +60,11 @@
       <option name="id" value="maven-rosewwod" />
       <option name="name" value="maven-rosewwod" />
       <option name="url" value="https://repo.rosewooddev.io/repository/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="highgeek-maven" />
+      <option name="name" value="highgeek-maven" />
+      <option name="url" value="https://maven.highgeek.eu/LegionLocal" />
     </remote-repository>
   </component>
 </project>

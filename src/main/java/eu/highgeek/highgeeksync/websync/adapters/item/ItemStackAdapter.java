@@ -91,10 +91,15 @@ public class ItemStackAdapter {
             // Convert ItemStack json to Map-Object format
             Map<String, Object> itemMap = gson.fromJson(s, Map.class);
 
+            //UNSAFE backwards support
+            itemMap.replace("v", Bukkit.getUnsafe().getDataVersion());
+
 
             // If the deserialized ItemStack does not have "meta" key, means it has no ItemMeta, return the item directly
             try{
-                if (!itemMap.containsKey("meta")) return ItemStack.deserialize(gson.fromJson(s, Map.class));
+                if (!itemMap.containsKey("meta")){
+                    return ItemStack.deserialize(itemMap);
+                }
             }catch (IllegalArgumentException exception){
                 Main.logger.info("Illegal item tried to by deserialized, changing itemType to barrier\nException:\n" + exception.getMessage());
                 return returnErrorBarrier();
