@@ -138,8 +138,8 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>DiscordSRV</artifactId>
-            <version>1.26.2</version>
-            <systemPath>${project.basedir}/jars/DiscordSRV-Build-1.26.2.jar</systemPath>
+            <version>1.27.é</version>
+            <systemPath>${project.basedir}/jars/DiscordSRV-Build-1.27.0.jar</systemPath>
             <type>jar</type>
             <scope>system</scope>
         </dependency>
