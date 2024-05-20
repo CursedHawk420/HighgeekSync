@@ -199,7 +199,9 @@ public class ManageRedisData {
         Main.redisConnection.set(message.getUuid(), gson.toJson(message));
         Main.logger.warning("addChatEntry triggered ");
     }
-    public static void getChatEntry(String uuid){}
+    public static String getEntry(String uuid){
+        return Main.redisConnection.get(uuid);
+    }
 
 //    public static void setInventoryItem(String uuid, int possition, ItemStack item){
 //        try  {

@@ -9,15 +9,23 @@ import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.events.*;
 import github.scarsz.discordsrv.dependencies.jda.api.hooks.ListenerAdapter;
 import github.scarsz.discordsrv.dependencies.jda.api.hooks.SubscribeEvent;
+import github.scarsz.discordsrv.objects.managers.AccountLinkManager;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import mineverse.Aust1n46.chat.api.events.VentureChatEvent;
 import mineverse.Aust1n46.chat.channel.ChatChannel;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 
+import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 public class DiscordListener extends ListenerAdapter {
+    private static LuckPerms luckPerms = LuckPermsProvider.get();
     public static String servername = ConfigManager.getString("chat.servername");
     @Subscribe
     public void onGameChatMessagePostProcessEvent(GameChatMessagePostProcessEvent event){
@@ -54,8 +62,11 @@ public class DiscordListener extends ListenerAdapter {
         String nickname = ventureChatEvent.getNickname();
         //Main.logger.warning( "ventureChatEvent.getNickname(): "+ nickname);
 
+        User user = luckPerms.getUserManager().getUser(event.getPlayer().getUniqueId());
+        String Prefix = user.getCachedData().getMetaData().getPrefix();
+        String Suffix = user.getCachedData().getMetaData().getSuffix();
 
-        ManageRedisData.addChatEntry(new Message(uuid, username, nickname, message, pg, time.toString(), channel, prefix, "game", servername));
+        ManageRedisData.addChatEntry(new Message(uuid, username, nickname, message, pg, time.toString(), channel, prefix, "game", servername, Prefix, Suffix, event.getPlayer().getUniqueId()));
 
 
         /*String globalJson = ventureChatEvent.getGlobalJSON();
@@ -71,6 +82,9 @@ public class DiscordListener extends ListenerAdapter {
         Main.logger.warning( "ventureChatEvent.getChat() Message: "+ ventureChatEvent.getChat());*/
     }
 
+    @Inject
+    AccountLinkManager accountLinkManager;
+
     @Subscribe
     public void onDiscordGuildMessageReceivedEvent(DiscordGuildMessageReceivedEvent event){
         if (ConfigManager.getBoolean("chat.listentodiscord")) {
@@ -85,12 +99,19 @@ public class DiscordListener extends ListenerAdapter {
             String username = event.getMessage().getAuthor().getName();
             String channel = event.getChannel().getName();
             LocalDateTime time = LocalDateTime.now();
-            String uuid = "chat:" + channel + ":" + time.toString().replaceAll(":", "-") + ":" + username;
+            String uuid = "prechat:" + channel + ":" + time.toString().replaceAll(":", "-") + ":" + username;
             String message = event.getMessage().getContentRaw();
             String pg = event.getMember().getRoles().get(0).getName();
             String prefix = "&8[&2" + channel + "&8@&2Disc&8]";
 
-            ManageRedisData.addChatEntry(new Message(uuid, username, username, message, pg, time.toString(), channel, prefix, "discord", servername));
+
+            try {
+
+            }catch (Exception ex){
+
+            }
+
+            ManageRedisData.addChatEntry(new Message(uuid, username, username, message, pg, time.toString(), channel, prefix, "discord", servername, null, null, null));
         /*Main.logger.warning("onDiscordGuildMessageReceivedEvent triggered ");
         Main.logger.warning(username);*/
         }

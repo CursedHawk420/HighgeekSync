@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9c7f4aa-d8bf-4f06-8306-346e6b9fba43" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/adapters/item/ItemStackAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/adapters/item/ItemStackAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/chat/CreateMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/chat/CreateMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/chat/DiscordListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/chat/DiscordListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/chat/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/chat/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/data/ManageRedisData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/data/ManageRedisData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/data/RedisEventSetup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eu/highgeek/highgeeksync/websync/data/RedisEventSetup.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,18 +42,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.HighgeekSync [clean].executor": "Run",
-    "Maven.HighgeekSync [deploy].executor": "Run",
-    "Maven.HighgeekSync [package].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Projects/Git/HighgeekSync/src/main/resources"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.HighgeekSync [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.HighgeekSync [deploy].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.HighgeekSync [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/Git/HighgeekSync/src/main/resources&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Projects\Git\HighgeekSync\src\main\resources" />
