@@ -46,9 +46,9 @@ public class CreateMessage {
 
         if (ConfigManager.getBoolean("chat.listentodiscord")){
             String name = message.getPrefix() + message.getUsername() + message.getSuffix();
-            name = name.replaceAll("&.", "");
+            name = name.replaceAll("§.", "");
             String mess =  message.getMessage();
-            mess = mess.replaceAll("&.", "");
+            mess = mess.replaceAll("§.", "");
             WebhookUtil.deliverMessage(textChannel, name, "https://highgeek.eu/api/skins/playerhead/"+message.getUsername(),mess, embeds);
         }
 
