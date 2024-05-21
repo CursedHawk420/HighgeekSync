@@ -38,14 +38,18 @@ public class CreateMessage {
         //String prefix = user.getCachedData().getMetaData().getPrefix();
 
 
-        String text = message.getChannelprefix() + " " + message.getPrefix() + message.getUsername() + message.getSuffix() + message.getMessage();
+        String text = message.getChannelprefix() + " " + message.getPrefix() + message.getUsername() + message.getSuffix() +" » " + message.getMessage();
 
 
         Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', text));
 
 
         if (ConfigManager.getBoolean("chat.listentodiscord")){
-            WebhookUtil.deliverMessage(textChannel, ChatColor.translateAlternateColorCodes('&', message.getPrefix() + message.getUsername() + message.getSuffix()), "https://highgeek.eu/api/skins/playerhead/"+message.getUsername(), ChatColor.translateAlternateColorCodes('&', message.getMessage()), embeds);
+            String name = message.getPrefix() + message.getUsername() + message.getSuffix();
+            name = name.replaceAll("&.", "");
+            String mess =  message.getMessage();
+            mess = mess.replaceAll("&.", "");
+            WebhookUtil.deliverMessage(textChannel, name, "https://highgeek.eu/api/skins/playerhead/"+message.getUsername(),mess, embeds);
         }
 
         //AsyncPlayerChatEvent chatEvent = new AsyncPlayerChatEvent(true, player, message.getMessage(), players);
