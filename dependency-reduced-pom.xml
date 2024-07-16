@@ -24,19 +24,32 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
+            <id>shade</id>
             <phase>package</phase>
             <goals>
               <goal>shade</goal>
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <relocations>
+            <relocation>
+              <pattern>de.tr7zw.changeme.nbtapi</pattern>
+              <shadedPattern>eu.highgeek.highgeeksync.nbtapi</shadedPattern>
+            </relocation>
+          </relocations>
+        </configuration>
       </plugin>
     </plugins>
   </build>
   <repositories>
+    <repository>
+      <id>codemc-repo</id>
+      <url>https://repo.codemc.io/repository/maven-public/</url>
+    </repository>
     <repository>
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
@@ -108,9 +121,9 @@
     <dependency>
       <groupId>net.dv8tion</groupId>
       <artifactId>DiscordSRV</artifactId>
-      <version>1.26.2</version>
+      <version>1.27.0</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/jars/DiscordSRV-Build-1.26.2.jar</systemPath>
+      <systemPath>${project.basedir}/jars/DiscordSRV-Build-1.27.0.jar</systemPath>
     </dependency>
   </dependencies>
   <distributionManagement>

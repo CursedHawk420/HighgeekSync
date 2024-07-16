@@ -1,5 +1,21 @@
 package eu.highgeek.highgeeksync.mysql;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+
 import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.MainManageData;
 import eu.highgeek.highgeeksync.api.SyncProfile;
@@ -7,18 +23,11 @@ import eu.highgeek.highgeeksync.api.SyncSettings;
 import eu.highgeek.highgeeksync.api.events.CompletedLoadingPlayerDataEvent;
 import eu.highgeek.highgeeksync.api.events.SavingPlayerDataEvent;
 import eu.highgeek.highgeeksync.backup.CustomSyncSettings;
-import eu.highgeek.highgeeksync.util.*;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import eu.highgeek.highgeeksync.util.AdvancementManager;
+import eu.highgeek.highgeeksync.util.BukkitSerialization;
+import eu.highgeek.highgeeksync.util.ConfigManager;
+import eu.highgeek.highgeeksync.util.PlayerInventoryManager;
+import eu.highgeek.highgeeksync.util.StatisticsManager;
 
 public class ManageMySQLData {
 

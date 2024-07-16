@@ -20,6 +20,7 @@ import eu.highgeek.highgeeksync.util.ConfigManager;
 import eu.highgeek.highgeeksync.util.PlayerInventoryManager;
 import eu.highgeek.highgeeksync.websync.objects.VirtualInventory;
 
+
 public class MainManageData {
 
     public static StorageType storageType;
