@@ -13,13 +13,14 @@ public class ItemStackAdapter {
 
     public static String itemStackToString(ItemStack itemStack){
         if (itemStack.getType() == Material.AIR){
-            return "{}";
+            return "air";
+        }else{
+            return NBT.itemStackToNBT(itemStack).toString();
         }
-        return NBT.itemStackToNBT(itemStack).toString();
     }
 
     public static ItemStack stringToItemStack(String json){
-        if (json == "{}"){
+        if (json == "air"){
             return new ItemStack(Material.AIR);
         }
 
