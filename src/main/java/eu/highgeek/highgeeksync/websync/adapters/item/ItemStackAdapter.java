@@ -53,7 +53,8 @@ public class ItemStackAdapter {
                 
             }catch(Exception ex){
                 Main.logger.warning("Exception ex: " + ex.getStackTrace());
-                return returnErrorBarrier();
+                return new ItemStack(Material.AIR);
+                //return returnErrorBarrier();
             }
         }
     }
