@@ -12,7 +12,7 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 public class ItemStackAdapter {
 
     public static String itemStackToString(ItemStack itemStack){
-        if (itemStack.getData().getItemType() == Material.AIR){
+        if (itemStack.getType() == Material.AIR){
             return "{}";
         }
         return NBT.itemStackToNBT(itemStack).toString();
