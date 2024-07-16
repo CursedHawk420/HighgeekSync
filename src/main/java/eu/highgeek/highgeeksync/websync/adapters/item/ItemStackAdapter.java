@@ -12,13 +12,21 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 public class ItemStackAdapter {
 
     public static String itemStackToString(ItemStack itemStack){
+        if (itemStack.getData().getItemType() == Material.AIR){
+            return "{}";
+        }
         return NBT.itemStackToNBT(itemStack).toString();
     }
 
     public static ItemStack stringToItemStack(String json){
         try{
             ReadWriteNBT nbt = NBT.parseNBT(json);
+            if (nbt == null){
+                return returnErrorBarrier();
+            }
+
             ItemStack itemStack = NBT.itemStackFromNBT(nbt);
+
             if (itemStack != null){
                 return itemStack;
             }else{
