@@ -26,34 +26,35 @@ public class ItemStackAdapter {
         if (json == "air"){
             Main.logger.warning("new AIR returned");
             return new ItemStack(Material.AIR);
-        }
+        }else{
 
-        try{
-            ReadWriteNBT nbt = NBT.parseNBT(json);
-            if (nbt == null){
-                Main.logger.warning("nbt == null ; barrier");
+            try{
+                ReadWriteNBT nbt = NBT.parseNBT(json);
+                if (nbt == null){
+                    Main.logger.warning("nbt == null ; barrier");
+                    return returnErrorBarrier();
+                }
+                ItemStack itemStack = NBT.itemStackFromNBT(nbt);
+    
+                if (itemStack == null){
+                    Main.logger.warning("itemStack == null ; barrier");
+                    return returnErrorBarrier();
+                }else
+                if (itemStack.getType() == null){
+                    Main.logger.warning("itemStack.getType() == null ; barrier");
+                    return returnErrorBarrier();
+                }else
+                if (itemStack.getType() == Material.AIR){
+                    Main.logger.warning("itemStack.getType() == Material.AIR ; barrier");
+                    return returnErrorBarrier();
+                }else{
+                    return itemStack;
+                }
+                
+            }catch(Exception ex){
+                Main.logger.warning("Exception ex: " + ex.getStackTrace());
                 return returnErrorBarrier();
             }
-            ItemStack itemStack = NBT.itemStackFromNBT(nbt);
-
-            if (itemStack == null){
-                Main.logger.warning("itemStack == null ; barrier");
-                return returnErrorBarrier();
-            }
-            if (itemStack.getType() == null){
-                Main.logger.warning("itemStack.getType() == null ; barrier");
-                return returnErrorBarrier();
-            }else
-            if (itemStack.getType() == Material.AIR){
-                Main.logger.warning("itemStack.getType() == Material.AIR ; barrier");
-                return returnErrorBarrier();
-            }else{
-                return itemStack;
-            }
-            
-        }catch(Exception ex){
-            Main.logger.warning("Exception ex: " + ex.getStackTrace());
-            return returnErrorBarrier();
         }
     }
 
