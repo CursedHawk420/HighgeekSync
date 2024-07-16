@@ -19,18 +19,27 @@ public class ItemStackAdapter {
     }
 
     public static ItemStack stringToItemStack(String json){
+        if (json == "{}"){
+            return new ItemStack(Material.AIR);
+        }
+
         try{
             ReadWriteNBT nbt = NBT.parseNBT(json);
             if (nbt == null){
                 return returnErrorBarrier();
             }
-
             ItemStack itemStack = NBT.itemStackFromNBT(nbt);
 
-            if (itemStack != null){
-                return itemStack;
-            }else{
+            if (itemStack == null){
                 return returnErrorBarrier();
+            }
+            if (itemStack.getType() == null){
+                return returnErrorBarrier();
+            }else
+            if (itemStack.getType() == Material.AIR){
+                return returnErrorBarrier();
+            }else{
+                return itemStack;
             }
             
         }catch(Exception ex){
