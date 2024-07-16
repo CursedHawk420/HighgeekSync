@@ -1,25 +1,21 @@
 package eu.highgeek.highgeeksync.websync.data;
 
+import static eu.highgeek.highgeeksync.Main.*;
+
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.MainManageData;
 import eu.highgeek.highgeeksync.websync.chat.CreateMessage;
 import eu.highgeek.highgeeksync.websync.chat.Message;
 import eu.highgeek.highgeeksync.websync.events.RedisSetEvent;
-import github.scarsz.discordsrv.dependencies.jda.api.entities.Webhook;
-import github.scarsz.discordsrv.util.DiscordUtil;
-import github.scarsz.discordsrv.util.WebhookUtil;
-import mineverse.Aust1n46.chat.command.chat.Me;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitTask;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
-
-import static eu.highgeek.highgeeksync.Main.main;
 
 
 //https://bukkit.org/threads/custom-events.5190/

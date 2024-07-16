@@ -1,31 +1,25 @@
 package eu.highgeek.highgeeksync.websync.data;
 
-import com.google.gson.*;
+import static eu.highgeek.highgeeksync.MainManageData.*;
+
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.util.ConfigManager;
 import eu.highgeek.highgeeksync.websync.adapters.item.ItemStackAdapter;
 import eu.highgeek.highgeeksync.websync.chat.Message;
 import eu.highgeek.highgeeksync.websync.objects.VirtualInventory;
-import mineverse.Aust1n46.chat.command.chat.Me;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.exceptions.JedisException;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Locale;
-import java.util.Random;
-import java.util.UUID;
-
-import static eu.highgeek.highgeeksync.MainManageData.inventoriesIds;
-import static eu.highgeek.highgeeksync.MainManageData.inventoriesObjects;
 
 
 public class ManageRedisData {

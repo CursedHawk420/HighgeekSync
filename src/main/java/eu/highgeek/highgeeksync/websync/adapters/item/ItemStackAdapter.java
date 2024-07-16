@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 
 public class ItemStackAdapter {
 
@@ -16,8 +17,14 @@ public class ItemStackAdapter {
 
     public static ItemStack stringToItemStack(String json){
         try{
-
-            return NBT.itemStackFromNBT(NBT.parseNBT(json));
+            ReadWriteNBT nbt = NBT.parseNBT(json);
+            ItemStack itemStack = NBT.itemStackFromNBT(nbt);
+            if (itemStack != null){
+                return itemStack;
+            }else{
+                return returnErrorBarrier();
+            }
+            
         }catch(Exception ex){
             return returnErrorBarrier();
         }

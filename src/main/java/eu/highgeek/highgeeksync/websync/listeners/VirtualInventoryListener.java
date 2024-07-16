@@ -1,33 +1,26 @@
 package eu.highgeek.highgeeksync.websync.listeners;
 
-import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.MainManageData;
-import eu.highgeek.highgeeksync.websync.data.ManageRedisData;
-import eu.highgeek.highgeeksync.websync.inventory.VirtualInventoryHolder;
-import eu.highgeek.highgeeksync.websync.objects.Item;
+import static eu.highgeek.highgeeksync.Main.*;
+import static eu.highgeek.highgeeksync.websync.DataManager.*;
+
+import java.util.ArrayList;
+import java.util.UUID;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.yaml.snakeyaml.util.ArrayUtils;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.UUID;
-
-import static eu.highgeek.highgeeksync.Main.main;
-import static eu.highgeek.highgeeksync.websync.DataManager.indexOf;
+import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.MainManageData;
+import eu.highgeek.highgeeksync.websync.data.ManageRedisData;
+import eu.highgeek.highgeeksync.websync.inventory.VirtualInventoryHolder;
 
 public class VirtualInventoryListener implements Listener {
     //item extracted event
