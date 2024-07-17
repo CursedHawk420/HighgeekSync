@@ -119,6 +119,30 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.saicone.rtag</groupId>
+      <artifactId>rtag</artifactId>
+      <version>1.5.5</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.saicone.rtag</groupId>
+      <artifactId>rtag-block</artifactId>
+      <version>1.5.5</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.saicone.rtag</groupId>
+      <artifactId>rtag-entity</artifactId>
+      <version>1.5.5</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.saicone.rtag</groupId>
+      <artifactId>rtag-item</artifactId>
+      <version>1.5.5</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>net.dv8tion</groupId>
       <artifactId>DiscordSRV</artifactId>
       <version>1.27.0</version>

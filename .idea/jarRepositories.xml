@@ -17,6 +17,11 @@
       <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="codemc-repo" />
+      <option name="name" value="codemc-repo" />
+      <option name="url" value="https://repo.codemc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="gitlab-maven" />
       <option name="name" value="gitlab-maven" />
       <option name="url" value="https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven" />

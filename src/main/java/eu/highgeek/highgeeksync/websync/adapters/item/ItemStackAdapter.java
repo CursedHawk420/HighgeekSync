@@ -1,7 +1,12 @@
 package eu.highgeek.highgeeksync.websync.adapters.item;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.saicone.rtag.item.ItemTagStream;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,15 +18,23 @@ import eu.highgeek.highgeeksync.Main;
 public class ItemStackAdapter {
 
     public static String itemStackToString(ItemStack itemStack){
-        Main.logger.warning("itemstack to parse: " + itemStack.getType());
+        /*Main.logger.warning("itemstack to parse: " + itemStack.getType());
         if (itemStack.getType() == Material.AIR){
             return "air";
         }else{
             return NBT.itemStackToNBT(itemStack).toString();
-        }
+        }*/
+
+        ItemTagStream tag = ItemTagStream.INSTANCE;
+        Map<String, Object> data = tag.toReadableMap(itemStack);
+        Gson gson = new Gson();
+        Type gsonType = new TypeToken(){}.getType();
+        String gsonString = gson.toJson(data, gsonType);
+        return gsonString;
     }
 
     public static ItemStack stringToItemStack(String json){
+        /*
         Main.logger.warning("string to parse: " + json);
         if (json == "air"){
             Main.logger.warning("new AIR returned");
@@ -56,7 +69,14 @@ public class ItemStackAdapter {
                 return new ItemStack(Material.AIR);
                 //return returnErrorBarrier();
             }
-        }
+        }*/
+        Gson gson = new Gson();
+        Type gsonType = new TypeToken(){}.getType();
+        Map<String, Object> map = gson.fromJson(json, gsonType);
+
+        ItemTagStream tag = ItemTagStream.INSTANCE;
+        ItemStack sameItem = tag.fromReadableMap(map);
+        return sameItem;
     }
 
     public static ItemStack returnErrorBarrier(){
