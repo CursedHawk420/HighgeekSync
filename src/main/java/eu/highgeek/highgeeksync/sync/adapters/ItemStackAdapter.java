@@ -1,17 +1,12 @@
 package eu.highgeek.highgeeksync.sync.adapters;
 
-import com.saicone.rtag.Rtag;
-import com.saicone.rtag.RtagDeserializer;
-import com.saicone.rtag.RtagItem;
-import com.saicone.rtag.item.ItemObject;
-import com.saicone.rtag.item.ItemTagStream;
+import java.util.Arrays;
+
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.Map;
+import com.saicone.rtag.item.ItemTagStream;
 
 
 public class ItemStackAdapter {

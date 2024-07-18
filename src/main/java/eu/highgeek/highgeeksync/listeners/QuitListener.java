@@ -1,9 +1,10 @@
 package eu.highgeek.highgeeksync.listeners;
 
-import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 
 public class QuitListener implements Listener {
 

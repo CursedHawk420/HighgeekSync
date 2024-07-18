@@ -1,8 +1,9 @@
 package eu.highgeek.highgeeksync.data.redis;
 
-import eu.highgeek.highgeeksync.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import eu.highgeek.highgeeksync.Main;
 
 public class RedisListener implements Listener {
     @EventHandler

@@ -1,18 +1,19 @@
 package eu.highgeek.highgeeksync.sync.inventory;
 
-import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.data.redis.RedisManager;
-import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
-import eu.highgeek.highgeeksync.objects.VirtualInventory;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
+import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.data.redis.RedisManager;
+import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
+import eu.highgeek.highgeeksync.objects.VirtualInventory;
 
 public class InventoryManager {
 

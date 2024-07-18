@@ -1,11 +1,11 @@
 package eu.highgeek.highgeeksync.listeners;
 
-import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.data.redis.RedisEventListener;
-import eu.highgeek.highgeeksync.data.redis.RedisInventorySetEvent;
-import eu.highgeek.highgeeksync.data.redis.RedisManager;
-import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
-import eu.highgeek.highgeeksync.sync.inventory.VirtualInventoryHolder;
+import static eu.highgeek.highgeeksync.Main.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,12 +18,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static eu.highgeek.highgeeksync.Main.main;
+import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.data.redis.RedisInventorySetEvent;
+import eu.highgeek.highgeeksync.data.redis.RedisManager;
+import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
+import eu.highgeek.highgeeksync.sync.inventory.VirtualInventoryHolder;
 
 public class VirtualInventoryListener implements Listener {
 

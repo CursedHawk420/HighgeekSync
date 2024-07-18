@@ -1,10 +1,11 @@
 package eu.highgeek.highgeeksync.utils;
 
-import eu.highgeek.highgeeksync.Main;
+import java.io.File;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
+import eu.highgeek.highgeeksync.Main;
 
 public class ConfigManager {
     public static FileConfiguration config = null;

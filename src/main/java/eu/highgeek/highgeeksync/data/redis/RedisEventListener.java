@@ -1,17 +1,17 @@
 package eu.highgeek.highgeeksync.data.redis;
 
+import static eu.highgeek.highgeeksync.Main.*;
+
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
-import org.bukkit.Bukkit;
-import org.bukkit.block.data.type.Fire;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitTask;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
-
-import static eu.highgeek.highgeeksync.Main.main;
 
 public class RedisEventListener extends JedisPubSub {
 

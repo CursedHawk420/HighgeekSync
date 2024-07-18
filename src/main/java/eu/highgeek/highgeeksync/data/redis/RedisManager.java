@@ -1,19 +1,18 @@
 package eu.highgeek.highgeeksync.data.redis;
 
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.bukkit.inventory.ItemStack;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.objects.VirtualInventory;
 import eu.highgeek.highgeeksync.sync.adapters.ItemStackAdapter;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import org.bukkit.Bukkit;
-import org.bukkit.event.server.MapInitializeEvent;
-import org.bukkit.inventory.ItemStack;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisPooled;
 import redis.clients.jedis.exceptions.JedisException;
 
 public class RedisManager {

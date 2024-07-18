@@ -78,7 +78,16 @@
           <url>https://oss.sonatype.org/content/groups/public/</url>
       </repository>
   </repositories>
-
+  <distributionManagement>
+    <repository>
+        <id>gitlab-maven</id>
+        <url>https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven</url>
+    </repository>
+    <snapshotRepository>
+        <id>gitlab-maven</id>
+        <url>https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven</url>
+    </snapshotRepository>
+</distributionManagement>
   <dependencies>
       <dependency>
           <groupId>org.spigotmc</groupId>

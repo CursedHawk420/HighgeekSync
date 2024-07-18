@@ -1,14 +1,14 @@
 package eu.highgeek.highgeeksync.commands;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import dev.jorel.commandapi.annotations.Command;
 import dev.jorel.commandapi.annotations.Default;
 import dev.jorel.commandapi.annotations.Permission;
 import dev.jorel.commandapi.annotations.Subcommand;
 import dev.jorel.commandapi.annotations.arguments.AStringArgument;
-import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 @Command("vinv")
 public class VinvCommand {

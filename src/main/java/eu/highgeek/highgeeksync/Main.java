@@ -1,29 +1,28 @@
 package eu.highgeek.highgeeksync;
 
-import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPIBukkit;
-import dev.jorel.commandapi.CommandAPIBukkitConfig;
-import eu.highgeek.highgeeksync.commands.HgCommand;
-import eu.highgeek.highgeeksync.commands.VinvCommand;
-import eu.highgeek.highgeeksync.data.redis.RedisEventListener;
-import eu.highgeek.highgeeksync.data.redis.RedisManager;
-import eu.highgeek.highgeeksync.data.sql.MySql;
-import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
-import eu.highgeek.highgeeksync.listeners.DeathListener;
-import eu.highgeek.highgeeksync.listeners.JoinListener;
-import eu.highgeek.highgeeksync.listeners.QuitListener;
-import eu.highgeek.highgeeksync.data.redis.RedisListener;
-import eu.highgeek.highgeeksync.listeners.VirtualInventoryListener;
-import eu.highgeek.highgeeksync.utils.ConfigManager;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-import redis.clients.jedis.Jedis;
 
-import java.util.logging.Logger;
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPIBukkitConfig;
+import eu.highgeek.highgeeksync.commands.VinvCommand;
+import eu.highgeek.highgeeksync.data.redis.RedisEventListener;
+import eu.highgeek.highgeeksync.data.redis.RedisListener;
+import eu.highgeek.highgeeksync.data.redis.RedisManager;
+import eu.highgeek.highgeeksync.data.sql.MySql;
+import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
+import eu.highgeek.highgeeksync.listeners.DeathListener;
+import eu.highgeek.highgeeksync.listeners.JoinListener;
+import eu.highgeek.highgeeksync.listeners.QuitListener;
+import eu.highgeek.highgeeksync.listeners.VirtualInventoryListener;
+import eu.highgeek.highgeeksync.utils.ConfigManager;
+import redis.clients.jedis.Jedis;
 
 public final class Main extends JavaPlugin {
 

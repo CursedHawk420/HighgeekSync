@@ -1,9 +1,10 @@
 package eu.highgeek.highgeeksync.sync.inventory;
 
 
-import eu.highgeek.highgeeksync.objects.VirtualInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+
+import eu.highgeek.highgeeksync.objects.VirtualInventory;
 
 public class VirtualInventoryHolder implements InventoryHolder {
     private String uuid;
