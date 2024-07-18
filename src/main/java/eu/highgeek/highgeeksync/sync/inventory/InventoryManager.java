@@ -82,6 +82,7 @@ public class InventoryManager {
     }
 
     public static List<VirtualInventory> getPlayerVirtualInventories(Player player){
+        Main.logger.warning("loading invetrories for player: " + player.getUniqueId().toString());
         List<VirtualInventory> invs = inventoriesList.stream()
         .filter(item -> item.OwnerUuid.equals(player.getUniqueId().toString()))
         .collect(Collectors.toList());
