@@ -21,6 +21,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.data.redis.RedisInventorySetEvent;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
+import eu.highgeek.highgeeksync.data.redis.RedisNewInventoryEvent;
+import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
 import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 import eu.highgeek.highgeeksync.sync.inventory.VirtualInventoryHolder;
 
@@ -141,5 +143,11 @@ public class VirtualInventoryListener implements Listener {
 
             player.getOpenInventory().getTopInventory().setItem(event.getSlotId(), newItem);
         }
+    }
+    
+    @EventHandler
+    public void onRedisNewInventoryEvent(RedisNewInventoryEvent event){
+        Main.logger.warning("onRedisNewInventoryEvent fired!");
+        MysqlVirtualInventoryManager.loadNewInventory(event.getInvUuid());
     }
 }

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 
@@ -146,4 +147,50 @@ public class MysqlVirtualInventoryManager {
             return false;
         }
     }
+
+    public static void loadNewInventory(String uuid) {
+        if (!MySql.isConnected()) {
+            MySql.connectMySQL();
+        }
+        try {
+            PreparedStatement preparedStatement = MySql.getConnection().prepareStatement("SELECT * FROM "+ virtualinventorytablename +" as p WHERE p.inventory_uuid = ?");
+            preparedStatement.setString(1, String.valueOf(uuid));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            HashMap<String, VirtualInventory> map = new HashMap<>();
+            for (int i = 0; i <= resultSet.getFetchSize(); i++) {
+                while (resultSet.next()){
+                    if (!resultSet.getBoolean("web")){
+
+                        VirtualInventory vinv = new VirtualInventory();
+
+                        vinv.setInvUuid(resultSet.getString("inventory_uuid"));
+                        vinv.setPlayerName(resultSet.getString("player_name"));
+                        vinv.setInvName(resultSet.getString("inventory_name"));
+                        vinv.setSize(resultSet.getInt("size"));
+                        vinv.setOwnerUuid(resultSet.getString("player_uuid"));
+                        vinv.setIsWeb(resultSet.getBoolean("web"));
+
+                        InventoryManager.inventoriesList.add(vinv);
+                    }
+                }
+            }
+
+            //what to do with this
+
+        } catch (SQLException exception) {
+            if (!MySql.isConnected()) {
+                MySql.connectMySQL();
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.main, new Runnable() {
+                    @Override
+                    public void run() {
+                        loadNewInventory(uuid);
+                    }
+                }, 20);
+            } else {
+                exception.printStackTrace();
+                Main.logger.warning("Something went wrong with loading an Inventory!");
+            }
+        }
+    }
+
 }

@@ -43,9 +43,27 @@ public class RedisEventListener extends JedisPubSub {
                 case "winv":
                     Main.logger.warning("Switch winv hit: " + message);
                     return;
+                case "newinventory":
+                    Main.logger.warning("Switch newinventory hit: " + message);
+
+                    return;
                 default:
                     return;
             }
+        }
+    }
+    public static void fireNewInventoryEvent(String message){
+        try {
+            String uuid = message.substring(message.length() - 36, message.length());
+            main.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+                @Override
+                public void run() {
+                    RedisNewInventoryEvent redisNewInventoryEvent = new RedisNewInventoryEvent(uuid, message);
+                    Bukkit.getPluginManager().callEvent(redisNewInventoryEvent);
+                }
+            },0);
+        }catch (Exception exception){
+            Main.logger.warning("error: " + exception.getMessage());
         }
     }
 
