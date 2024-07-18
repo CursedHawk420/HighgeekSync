@@ -1,20 +1,17 @@
 package eu.highgeek.highgeeksync.data.sql;
 
-import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.objects.VirtualInventory;
-import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
-import eu.highgeek.highgeeksync.utils.ConfigManager;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
+
+import org.bukkit.Bukkit;
+
+import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.objects.VirtualInventory;
+import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
+import eu.highgeek.highgeeksync.utils.ConfigManager;
 
 public class MysqlVirtualInventoryManager {
 

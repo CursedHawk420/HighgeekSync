@@ -82,9 +82,14 @@ public class InventoryManager {
     }
 
     public static List<VirtualInventory> getPlayerVirtualInventories(Player player){
-        return inventoriesList.stream()
-                .filter(item -> item.OwnerUuid.equals(player.getUniqueId().toString()))
-                .collect(Collectors.toList());
+        List<VirtualInventory> invs = inventoriesList.stream()
+        .filter(item -> item.OwnerUuid.equals(player.getUniqueId().toString()))
+        .collect(Collectors.toList());
+        for (VirtualInventory virtualInventory : invs) {
+            Main.logger.warning("getPlayerVirtualInventories: " + virtualInventory.InvUuid);
+        }
+        
+        return invs;
     }
 
     public static VirtualInventory createVirtualInventory(Player player,String name){
