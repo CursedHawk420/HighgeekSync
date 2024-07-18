@@ -44,6 +44,7 @@ public class RedisEventListener extends JedisPubSub {
                     Main.logger.warning("Switch winv hit: " + message);
                     return;
                 case "newinventory":
+                    fireNewInventoryEvent(message);
                     Main.logger.warning("Switch newinventory hit: " + message);
 
                     return;
