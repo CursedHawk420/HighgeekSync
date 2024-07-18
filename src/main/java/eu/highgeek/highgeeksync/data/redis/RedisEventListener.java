@@ -59,6 +59,7 @@ public class RedisEventListener extends JedisPubSub {
                 @Override
                 public void run() {
                     RedisNewInventoryEvent redisNewInventoryEvent = new RedisNewInventoryEvent(uuid, message);
+                    Main.logger.warning("fireNewInventoryEvent uuid: " + uuid + " rawUuid: " + message);
                     Bukkit.getPluginManager().callEvent(redisNewInventoryEvent);
                 }
             },0);
