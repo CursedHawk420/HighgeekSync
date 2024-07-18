@@ -110,6 +110,7 @@ public class InventoryManager {
         List<VirtualInventory> inventory = getPlayerVirtualInventories(player);
         inventory.add(vinv);
         playerInventories.put(player.getUniqueId(), inventory);
+        inventoriesList.add(vinv);
         return vinv;
     }
 
