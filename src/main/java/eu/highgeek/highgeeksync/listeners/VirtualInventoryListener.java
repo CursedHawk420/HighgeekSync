@@ -19,9 +19,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.data.redis.RedisInventorySetEvent;
+import eu.highgeek.highgeeksync.events.RedisInventorySetEvent;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
-import eu.highgeek.highgeeksync.data.redis.RedisNewInventoryEvent;
+import eu.highgeek.highgeeksync.events.RedisNewInventoryEvent;
 import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
 import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 import eu.highgeek.highgeeksync.sync.inventory.VirtualInventoryHolder;

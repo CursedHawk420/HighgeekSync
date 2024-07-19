@@ -18,9 +18,9 @@ chat:
 mysql:
   host: "127.0.0.1"
   port: "3306"
-  database: "mcserver_datadb"
+  database: "database"
   username: "root"
-  password: "abahanama420"
+  password: "supersecret"
   synctablename: "sync_player_data_table"
   virtualinventorytablename: "sync_redis_data_table"
 
@@ -30,10 +30,10 @@ mysql:
 #
 
 redis:
-  host: "10.220.22.126"
+  host: "127.0.0.1"
   database: "1"
   username: "root"
-  password: "st"
+  password: "supersecret"
   port: "6379"
 
 #

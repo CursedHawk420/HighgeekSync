@@ -2,6 +2,7 @@ package eu.highgeek.highgeeksync;
 
 import java.util.logging.Logger;
 
+import eu.highgeek.highgeeksync.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -13,18 +14,13 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import eu.highgeek.highgeeksync.commands.VinvCommand;
 import eu.highgeek.highgeeksync.data.redis.RedisEventListener;
-import eu.highgeek.highgeeksync.data.redis.RedisListener;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.data.sql.MySql;
 import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
-import eu.highgeek.highgeeksync.listeners.DeathListener;
-import eu.highgeek.highgeeksync.listeners.JoinListener;
-import eu.highgeek.highgeeksync.listeners.QuitListener;
-import eu.highgeek.highgeeksync.listeners.VirtualInventoryListener;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
 import redis.clients.jedis.Jedis;
 
-public final class Main extends JavaPlugin {
+public final class Main extends JavaPlugin implements Listener {
 
     public static Main main;
     public static Logger logger;
@@ -36,13 +32,9 @@ public final class Main extends JavaPlugin {
         pluginManager.registerEvents((Listener) new JoinListener(), (Plugin) this);
         pluginManager.registerEvents((Listener) new QuitListener(), (Plugin) this);
         pluginManager.registerEvents((Listener) new DeathListener(), (Plugin) this);
-        //pluginManager.registerEvents((Listener) new CommandListener(), (Plugin) this);
 
-
-        pluginManager.registerEvents((Listener) new RedisListener(), (Plugin) this);
-
+        pluginManager.registerEvents((Listener) new ChatListener(), (Plugin) this);
         pluginManager.registerEvents((Listener) new VirtualInventoryListener(), (Plugin) this);
-        //pluginManager.registerEvents((Listener) new VentureChatListener(), (Plugin) this);
     }
 
     @Override
@@ -57,6 +49,8 @@ public final class Main extends JavaPlugin {
         logger = this.getLogger();
         saveDefaultConfig();
         ConfigManager.reload();
+
+        checkDependencies();
 
         MySql.initMysql();
         RedisManager.initRedis();
@@ -76,5 +70,12 @@ public final class Main extends JavaPlugin {
 
         RedisEventListener.listenerStopper();
         MySql.disconnectMySQL();
+    }
+
+    private void checkDependencies(){
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) {
+            logger.warning("Could not find PlaceholderAPI! This plugin is required.");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
     }
 }

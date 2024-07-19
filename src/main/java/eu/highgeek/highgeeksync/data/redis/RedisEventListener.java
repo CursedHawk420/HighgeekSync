@@ -2,6 +2,10 @@ package eu.highgeek.highgeeksync.data.redis;
 
 import static eu.highgeek.highgeeksync.Main.*;
 
+import eu.highgeek.highgeeksync.events.AsyncRedisChatSetEvent;
+import eu.highgeek.highgeeksync.events.RedisInventorySetEvent;
+import eu.highgeek.highgeeksync.events.RedisNewInventoryEvent;
+import eu.highgeek.highgeeksync.objects.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -38,6 +42,7 @@ public class RedisEventListener extends JedisPubSub {
                     fireVinvEvent(message);
                     return;
                 case "chat":
+                    fireChatMessage(message);
                     Main.logger.warning("Switch chat hit: " + message);
                     return;
                 case "winv":
@@ -53,6 +58,12 @@ public class RedisEventListener extends JedisPubSub {
             }
         }
     }
+
+    public static void fireChatMessage(String message){
+        AsyncRedisChatSetEvent asyncRedisChatSetEvent = new AsyncRedisChatSetEvent(gson.fromJson(RedisManager.getRedis(message), Message.class), message);
+        Bukkit.getPluginManager().callEvent(asyncRedisChatSetEvent);
+    }
+
     public static void fireNewInventoryEvent(String message){
         try {
             String uuid = message.substring(message.length() - 36, message.length());

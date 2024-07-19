@@ -1,0 +1,20 @@
+<settings>
+  <servers>
+    <server>
+      <id>gitlab-maven</id>
+      <username>${gitlab.username}</username>
+      <password>${gitlab.password}</password>
+      <configuration>
+        <authenticationInfo>
+          <userName>${gitlab.username}</userName>
+          <password>${gitlab.password}</password>
+        </authenticationInfo>
+      </configuration>
+    </server>
+    <server>
+      <id>highgeek-maven</id>
+      <username>${highgeekmaven.username}</username>
+      <password>${highgeekmaven.password}</password>
+    </server>
+  </servers>
+</settings>

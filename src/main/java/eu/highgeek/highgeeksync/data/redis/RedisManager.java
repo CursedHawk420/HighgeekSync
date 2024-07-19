@@ -42,7 +42,6 @@ public class RedisManager {
     }
 
     public static Jedis setupRedis() {
-        Main.logger.warning("Redis connection string:  \n" + host + ":" + port);
         final GenericObjectPoolConfig<Jedis> poolConfig = new JedisPoolConfig();
         poolConfig.setMaxIdle(0);
         Jedis jedis;
