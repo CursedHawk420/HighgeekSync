@@ -2,6 +2,9 @@ package eu.highgeek.highgeeksync;
 
 import java.util.logging.Logger;
 
+import com.comphenix.protocol.AsynchronousManager;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import eu.highgeek.highgeeksync.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -26,6 +29,8 @@ public final class Main extends JavaPlugin implements Listener {
     public static Logger logger;
     public static Jedis redisConnection;
     public static BukkitTask redisListenerTask;
+    public static ProtocolManager protocolManager;
+    public static AsynchronousManager asynchronousProtocolManager;
 
     public void registerListener() {
         PluginManager pluginManager = Bukkit.getPluginManager();
@@ -52,6 +57,10 @@ public final class Main extends JavaPlugin implements Listener {
 
         checkDependencies();
 
+        protocolManager = ProtocolLibrary.getProtocolManager();
+        asynchronousProtocolManager = protocolManager.getAsynchronousManager();
+
+
         MySql.initMysql();
         RedisManager.initRedis();
 
@@ -75,6 +84,10 @@ public final class Main extends JavaPlugin implements Listener {
     private void checkDependencies(){
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) {
             logger.warning("Could not find PlaceholderAPI! This plugin is required.");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
+        if (Bukkit.getPluginManager().getPlugin("ProtocolLib") == null) {
+            logger.warning("Could not find ProtocolLib! This plugin is required.");
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }

@@ -23,6 +23,11 @@ public class RedisInventorySetEvent extends Event {
         return HANDLERS;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+
     public String getRawMessage() {
         return this.rawUuid;
     }

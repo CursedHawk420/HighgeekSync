@@ -60,7 +60,7 @@ public class RedisEventListener extends JedisPubSub {
     }
 
     public static void fireChatMessage(String message){
-        AsyncRedisChatSetEvent asyncRedisChatSetEvent = new AsyncRedisChatSetEvent(gson.fromJson(RedisManager.getRedis(message), Message.class), message);
+        AsyncRedisChatSetEvent asyncRedisChatSetEvent = new AsyncRedisChatSetEvent(gson.fromJson(RedisManager.getRedis(message), Message.class), message, true);
         Bukkit.getPluginManager().callEvent(asyncRedisChatSetEvent);
     }
 

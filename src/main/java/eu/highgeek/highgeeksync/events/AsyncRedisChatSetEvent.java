@@ -17,9 +17,18 @@ public class AsyncRedisChatSetEvent extends Event {
         return HANDLERS;
     }
 
-    public AsyncRedisChatSetEvent(Message message, String rawUuid){
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+
+
+    public AsyncRedisChatSetEvent(Message message, String rawUuid, boolean isAsync){
+        super(isAsync);
+
         this.message = message;
         this.rawUuid = rawUuid;
+
     }
 
     public Message getMessage() {

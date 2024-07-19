@@ -3,4 +3,4 @@ version: '${project.version}'
 main: eu.highgeek.highgeeksync.Main
 api-version: '1.20'
 
-depend: [PlaceholderAPI]
+depend: [PlaceholderAPI, ProtocolLib]

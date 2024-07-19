@@ -1,14 +1,12 @@
 package eu.highgeek.highgeeksync.objects;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import org.jetbrains.annotations.Nullable;
+import lombok.*;
+import jline.internal.Nullable;
 
 import java.util.UUID;
 
-@Getter
 @Setter
+@Getter
 @Builder
 public class Message {
     private String uuid;
@@ -27,4 +25,22 @@ public class Message {
     private String suffix;
     @Nullable
     private UUID playeruuid;
+
+    public Message(String uuid, String username, String nickname, String message, String primarygroup, String datetime, String channel, String channelprefix, String source, String servername, String prefix, String suffix, UUID playeruuid){
+        this.uuid = uuid;
+        this.username = username;
+        this.nickname = nickname;
+        this.message = message;
+        this.primarygroup = primarygroup;
+        this.datetime = datetime;
+        this.channel = channel;
+        this.channelprefix = channelprefix;
+        this.source = source;
+        this.servername = servername;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.playeruuid = playeruuid;
+    }
+
+
 }

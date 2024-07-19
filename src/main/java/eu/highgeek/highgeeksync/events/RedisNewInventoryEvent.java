@@ -20,7 +20,12 @@ public class RedisNewInventoryEvent extends Event{
         return HANDLERS;
     }
 
-    
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+
     public String getRawUuid() {
         return this.rawUuid;
     }
