@@ -6,7 +6,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.common.Common;
-import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 
 public class JoinListener implements Listener {
 
