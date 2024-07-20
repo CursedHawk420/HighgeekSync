@@ -6,6 +6,9 @@ import com.comphenix.protocol.AsynchronousManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import eu.highgeek.highgeeksync.listeners.*;
+import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
+import eu.highgeek.highgeeksync.sync.chat.ChatInitializer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -66,6 +69,7 @@ public final class Main extends JavaPlugin implements Listener {
 
 
         MysqlVirtualInventoryManager.loadAllVirtualInventoriesObjects();
+        ChatInitializer.channelInitializer();
 
 
         registerListener();
