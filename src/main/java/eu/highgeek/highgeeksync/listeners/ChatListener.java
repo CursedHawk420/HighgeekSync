@@ -1,22 +1,19 @@
 package eu.highgeek.highgeeksync.listeners;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.events.AsyncRedisChatSetEvent;
-import eu.highgeek.highgeeksync.objects.Message;
-import eu.highgeek.highgeeksync.protocollib.WrapperPlayServerChat;
-import eu.highgeek.highgeeksync.sync.chat.MessageSender;
-import eu.highgeek.highgeeksync.utils.ConfigManager;
-import eu.highgeek.highgeeksync.utils.VersionHandler;
-import org.bukkit.Bukkit;
+import java.time.LocalDateTime;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.time.LocalDateTime;
+import com.comphenix.protocol.events.PacketContainer;
+
+import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.events.AsyncRedisChatSetEvent;
+import eu.highgeek.highgeeksync.objects.Message;
+import eu.highgeek.highgeeksync.sync.chat.MessageSender;
+import eu.highgeek.highgeeksync.utils.ConfigManager;
 
 public class ChatListener implements Listener {
 

@@ -1,14 +1,19 @@
 package eu.highgeek.highgeeksync.data.redis;
 
+import java.util.Set;
+
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.objects.PlayerSettings;
 import eu.highgeek.highgeeksync.objects.VirtualInventory;
 import eu.highgeek.highgeeksync.sync.adapters.ItemStackAdapter;
+import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -74,11 +79,30 @@ public class RedisManager {
         setRedis(uuid, ItemStackAdapter.itemStackToString(item));
     }
 
+    public static Set<String> getKeysPrefix(String prefix){
+        return Main.redisConnection.keys(prefix);
+    }
+
 
     public static void generateInventoryInRedis(VirtualInventory virtualInventory, String invType){
         String prefix =  invType+":"+virtualInventory.PlayerName+":"+virtualInventory.InvUuid+":";
         for (int i = 0; i < virtualInventory.Size; i++) {
             setRedis(prefix+i, "{id:\"minecraft:air\"}");
+        }
+    }
+
+    public static void generatePlayerSettings(PlayerSettings playerSettings){
+        setRedis("players:settings:"+playerSettings.playerName, gson.toJson(playerSettings));
+    }
+
+    public static PlayerSettings getPlayerSettings(Player player){
+        String playerSettings = getRedis("players:settings:"+player.getName());
+        if (playerSettings == null){
+            PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.defaultChannels);
+            generatePlayerSettings(newPlayerSettings);
+            return newPlayerSettings;
+        }else{
+            return gson.fromJson(getRedis("players:settings:"+player.getName()), PlayerSettings.class);
         }
     }
 }
