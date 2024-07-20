@@ -61,17 +61,16 @@ public class RedisManager {
         }
     }
 
-    public static String getRedis(String key){
+    public static String getStringRedis(String key){
         return Main.redisConnection.get(key);
     }
-
 
     public static void setRedis(String key, String toSet){
         Main.redisConnection.set(key, toSet);
     }
 
     public static ItemStack getItemFromRedis(String uuid){
-        return ItemStackAdapter.stringToItemStack(getRedis(uuid));
+        return ItemStackAdapter.stringToItemStack(getStringRedis(uuid));
     }
 
 
@@ -97,13 +96,13 @@ public class RedisManager {
     }
 
     public static PlayerSettings getPlayerSettings(Player player){
-        String playerSettings = getRedis("players:settings:"+player.getName());
+        String playerSettings = getStringRedis("players:settings:"+player.getName());
         if (playerSettings == null){
             PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.defaultChannels);
             generatePlayerSettings(newPlayerSettings);
             return newPlayerSettings;
         }else{
-            return gson.fromJson(getRedis("players:settings:"+player.getName()), PlayerSettings.class);
+            return gson.fromJson(getStringRedis("players:settings:"+player.getName()), PlayerSettings.class);
         }
     }
 }

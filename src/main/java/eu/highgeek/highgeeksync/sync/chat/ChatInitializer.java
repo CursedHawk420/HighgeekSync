@@ -1,5 +1,6 @@
 package eu.highgeek.highgeeksync.sync.chat;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import com.google.gson.Gson;
@@ -18,8 +19,11 @@ public class ChatInitializer {
         Main.logger.warning("keySet: " + keySet);
         for (String key : keySet) {
             Main.logger.warning("Loading channel: " + key);
-            ChatChannel channel = gson.fromJson(RedisManager.getRedis(key), ChatChannel.class);
+            String channelJson = RedisManager.getStringRedis(key);
+            Main.logger.warning("channelJson: " + channelJson);
+            ChatChannel channel = gson.fromJson(channelJson, ChatChannel.class);
             ChannelManager.chatChannels.add(channel);
+            ChannelManager.channelPlayers.put(channel, new ArrayList<>());
             if (channel.isDefault){
                 ChannelManager.defaultChannels.add(channel.name);
             }

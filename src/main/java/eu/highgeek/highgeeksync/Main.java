@@ -2,19 +2,16 @@ package eu.highgeek.highgeeksync;
 
 import java.util.logging.Logger;
 
-import com.comphenix.protocol.AsynchronousManager;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import eu.highgeek.highgeeksync.listeners.*;
-import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
-import eu.highgeek.highgeeksync.sync.chat.ChatInitializer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+
+import com.comphenix.protocol.AsynchronousManager;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
@@ -23,6 +20,12 @@ import eu.highgeek.highgeeksync.data.redis.RedisEventListener;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.data.sql.MySql;
 import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
+import eu.highgeek.highgeeksync.listeners.ChatListener;
+import eu.highgeek.highgeeksync.listeners.DeathListener;
+import eu.highgeek.highgeeksync.listeners.JoinListener;
+import eu.highgeek.highgeeksync.listeners.QuitListener;
+import eu.highgeek.highgeeksync.listeners.VirtualInventoryListener;
+import eu.highgeek.highgeeksync.sync.chat.ChatInitializer;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
 import redis.clients.jedis.Jedis;
 
@@ -69,11 +72,12 @@ public final class Main extends JavaPlugin implements Listener {
 
 
         MysqlVirtualInventoryManager.loadAllVirtualInventoriesObjects();
-        ChatInitializer.channelInitializer();
 
 
         registerListener();
 
+        ChatInitializer.channelInitializer();
+        
         CommandAPI.registerCommand(VinvCommand.class);
     }
 

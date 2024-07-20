@@ -2,10 +2,6 @@ package eu.highgeek.highgeeksync.data.redis;
 
 import static eu.highgeek.highgeeksync.Main.*;
 
-import eu.highgeek.highgeeksync.events.AsyncRedisChatSetEvent;
-import eu.highgeek.highgeeksync.events.RedisInventorySetEvent;
-import eu.highgeek.highgeeksync.events.RedisNewInventoryEvent;
-import eu.highgeek.highgeeksync.objects.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -13,6 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.events.AsyncRedisChatSetEvent;
+import eu.highgeek.highgeeksync.events.RedisInventorySetEvent;
+import eu.highgeek.highgeeksync.events.RedisNewInventoryEvent;
+import eu.highgeek.highgeeksync.objects.Message;
 import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
@@ -60,7 +60,7 @@ public class RedisEventListener extends JedisPubSub {
     }
 
     public static void fireChatMessage(String message){
-        AsyncRedisChatSetEvent asyncRedisChatSetEvent = new AsyncRedisChatSetEvent(gson.fromJson(RedisManager.getRedis(message), Message.class), message, true);
+        AsyncRedisChatSetEvent asyncRedisChatSetEvent = new AsyncRedisChatSetEvent(gson.fromJson(RedisManager.getStringRedis(message), Message.class), message, true);
         Bukkit.getPluginManager().callEvent(asyncRedisChatSetEvent);
     }
 
