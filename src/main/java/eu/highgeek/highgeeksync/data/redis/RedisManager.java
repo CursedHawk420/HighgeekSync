@@ -80,6 +80,7 @@ public class RedisManager {
     }
 
     public static Set<String> getKeysPrefix(String prefix){
+        Main.logger.warning("Getting keys with prefix: " + prefix);
         return Main.redisConnection.keys(prefix);
     }
 
