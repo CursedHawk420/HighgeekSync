@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
+import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.objects.ChatChannel;
 import eu.highgeek.highgeeksync.objects.ChatPlayer;
 import eu.highgeek.highgeeksync.objects.PlayerSettings;
@@ -25,6 +26,7 @@ public class ChannelManager {
         chatPlayer.setPlayer(player);
         List<ChatChannel> playerChannels = new ArrayList<>();
 
+        Main.logger.warning("Player channels: ");
         for (String stringChannel : playerSettings.joinedChannels) {
             ChatChannel playChannel = chatChannels.stream()
             .filter(s -> s.name.equals(stringChannel))
@@ -32,6 +34,8 @@ public class ChannelManager {
             .orElse(null);
             playerChannels.add(playChannel);
             channelPlayers.get(playChannel).add(chatPlayer);
+
+            Main.logger.warning("Name: " + playChannel.name + ", Prefix: " + playChannel.prefix + ", isDefault: " + playChannel.isDefault + ", isLocal: " + playChannel.isLocal);
         }
         chatPlayer.setJoinedChannels(playerChannels);
     }
@@ -71,5 +75,9 @@ public class ChannelManager {
     public static void joinPlayerToChannel(ChatPlayer player, ChatChannel channel){
         channelPlayers.get(channel).add(player);
 
+    }
+
+    public static void onPlayerQuit(Player player){
+        //todo unload all player related vars
     }
 }

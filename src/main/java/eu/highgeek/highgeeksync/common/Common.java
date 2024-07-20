@@ -24,4 +24,10 @@ public class Common {
         ChannelManager.onPlayerJoin(playerSetting, player);
     }
 
+    public static void onPlayerQuit(Player player){
+        InventoryManager.onPlayerLeave(player);
+
+        ChannelManager.onPlayerQuit(player);
+    }
+
 }

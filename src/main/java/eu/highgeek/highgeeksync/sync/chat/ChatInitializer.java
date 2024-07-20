@@ -5,6 +5,7 @@ import java.util.Set;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.objects.ChatChannel;
 
@@ -20,6 +21,10 @@ public class ChatInitializer {
             if (channel.isDefault){
                 ChannelManager.defaultChannels.add(channel.name);
             }
+        }
+        Main.logger.warning("Registered channels: ");
+        for (ChatChannel channel :  ChannelManager.chatChannels) {
+            Main.logger.warning("Name: " + channel.name + ", Prefix: " + channel.prefix + ", isDefault: " + channel.isDefault + ", isLocal: " + channel.isLocal);
         }
     }
 }
