@@ -60,7 +60,7 @@ public class ChatListener implements Listener {
         List<ChatPlayer> chatPlayers = ChannelManager.channelPlayers.get(channel);
 
         for (ChatPlayer chatPlayer : chatPlayers) {
-            sendChatPacket(chatPlayer.getPlayer(), packetToSend)
+            sendChatPacket(chatPlayer.getPlayer(), packetToSend);
         }
 
         //todo list players in channel
