@@ -14,7 +14,7 @@ public class ChatInitializer {
     private static final Gson gson = new GsonBuilder().create();
 
     public static void channelInitializer(){
-        Set<String> keySet = RedisManager.getKeysPrefix("settings:server:chatchannels:");
+        Set<String> keySet = RedisManager.getKeysPrefix("settings:server:chat:channels:*");
         Main.logger.warning("keySet: " + keySet);
         for (String key : keySet) {
             Main.logger.warning("Loading channel: " + key);
