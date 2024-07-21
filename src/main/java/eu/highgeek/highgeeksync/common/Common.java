@@ -1,7 +1,6 @@
 package eu.highgeek.highgeeksync.common;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
@@ -12,14 +11,18 @@ import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 
 public class Common {
 
-    public static List<PlayerSettings> playerSettings = new ArrayList<>();
+    //public static List<PlayerSettings> playerSettings = new ArrayList<>();
+
+    public static HashMap<Player, PlayerSettings> playerSettings = new HashMap<>();
 
     public static void onPlayerJoin(Player player){
 
         InventoryManager.onPlayerJoin(player);
 
         PlayerSettings playerSetting = RedisManager.getPlayerSettings(player);
-        playerSettings.add(playerSetting);
+        playerSettings.put(player, playerSetting);
+        
+        //playerSettings.add(playerSetting);
 
         ChannelManager.onPlayerJoin(playerSetting, player);
     }
@@ -29,5 +32,6 @@ public class Common {
 
         ChannelManager.onPlayerQuit(player);
     }
+
 
 }

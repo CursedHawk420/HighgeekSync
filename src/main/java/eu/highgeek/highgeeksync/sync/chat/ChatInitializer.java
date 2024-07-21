@@ -24,9 +24,6 @@ public class ChatInitializer {
             ChatChannel channel = gson.fromJson(channelJson, ChatChannel.class);
             ChannelManager.chatChannels.add(channel);
             ChannelManager.channelPlayers.put(channel, new ArrayList<>());
-            if (channel.isDefault){
-                ChannelManager.defaultChannels.add(channel.name);
-            }
         }
         Main.logger.warning("Registered channels: ");
         for (ChatChannel channel :  ChannelManager.chatChannels) {

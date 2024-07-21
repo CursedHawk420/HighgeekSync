@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.bukkit.entity.Player;
 
 import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.common.Common;
+import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.objects.ChatChannel;
 import eu.highgeek.highgeeksync.objects.ChatPlayer;
 import eu.highgeek.highgeeksync.objects.PlayerSettings;
@@ -17,7 +19,7 @@ public class ChannelManager {
     public static List<ChatPlayer> chatPlayers = new ArrayList<>();
 
     public static List<ChatChannel> chatChannels = new ArrayList<>();
-    public static List<String> defaultChannels = new ArrayList<>();
+    //public static List<String> defaultChannels = new ArrayList<>();
 
     public static HashMap<ChatChannel, List<ChatPlayer>> channelPlayers = new HashMap<>();
 
@@ -37,6 +39,7 @@ public class ChannelManager {
 
             Main.logger.warning("Name: " + playChannel.name + ", Prefix: " + playChannel.prefix + ", isDefault: " + playChannel.isDefault + ", isLocal: " + playChannel.isLocal);
         }
+        chatPlayers.add(chatPlayer);
         chatPlayer.setJoinedChannels(playerChannels);
     }
 
@@ -72,12 +75,31 @@ public class ChannelManager {
         return channels;
     }
 
-    public static void joinPlayerToChannel(ChatPlayer player, ChatChannel channel){
-        channelPlayers.get(channel).add(player);
+    public static void joinPlayerToChannel(ChatPlayer chatPlayer, ChatChannel channel){
+        channelPlayers.get(channel).add(chatPlayer);
+        chatPlayer.getJoinedChannels().add(channel);
+
+        Common.playerSettings.get(chatPlayer.getPlayer()).joinedChannels.add(channel.name);
+        RedisManager.setPlayerSettings(Common.playerSettings.get(chatPlayer.getPlayer()));
 
     }
 
     public static void onPlayerQuit(Player player){
         //todo unload all player related vars
+        ChatPlayer chatPlayer = getChatPlayer(player);
+        
+        chatPlayers.remove(chatPlayer);
+        
+        for (ChatChannel chatChannel : chatPlayer.getJoinedChannels()) {
+            channelPlayers.get(chatChannel).remove(chatPlayer);
+        }
+    }
+
+    public static void disconnectPlayerFromChannel(ChatPlayer chatPlayer, ChatChannel chatChannel){
+        chatPlayer.getJoinedChannels().remove(chatChannel);
+        channelPlayers.get(chatChannel).remove(chatPlayer);
+
+        Common.playerSettings.get(chatPlayer.getPlayer()).joinedChannels.remove(chatChannel.name);
+        RedisManager.setPlayerSettings(Common.playerSettings.get(chatPlayer.getPlayer()));
     }
 }

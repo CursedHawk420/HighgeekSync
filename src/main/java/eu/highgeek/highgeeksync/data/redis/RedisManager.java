@@ -1,6 +1,7 @@
 package eu.highgeek.highgeeksync.data.redis;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.objects.ChatChannel;
 import eu.highgeek.highgeeksync.objects.PlayerSettings;
 import eu.highgeek.highgeeksync.objects.VirtualInventory;
 import eu.highgeek.highgeeksync.sync.adapters.ItemStackAdapter;
@@ -91,15 +93,15 @@ public class RedisManager {
         }
     }
 
-    public static void generatePlayerSettings(PlayerSettings playerSettings){
+    public static void setPlayerSettings(PlayerSettings playerSettings){
         setRedis("players:settings:"+playerSettings.playerName, gson.toJson(playerSettings));
     }
 
     public static PlayerSettings getPlayerSettings(Player player){
         String playerSettings = getStringRedis("players:settings:"+player.getName());
         if (playerSettings == null){
-            PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.defaultChannels);
-            generatePlayerSettings(newPlayerSettings);
+            PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.getDefaultChatChannels().stream().map(ChatChannel::getName).collect(Collectors.toList()));
+            setPlayerSettings(newPlayerSettings);
             return newPlayerSettings;
         }else{
             return gson.fromJson(getStringRedis("players:settings:"+player.getName()), PlayerSettings.class);

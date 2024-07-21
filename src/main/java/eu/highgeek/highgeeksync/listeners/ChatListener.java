@@ -67,9 +67,6 @@ public class ChatListener implements Listener {
     }
 
     public static void sendChatPacket(Player player, PacketContainer packet) {
-        //todo send packet to them
-
-
         try {
             Main.protocolManager.sendServerPacket(player, packet);
         } catch (Exception e) {
