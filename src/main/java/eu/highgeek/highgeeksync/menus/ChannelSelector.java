@@ -1,7 +1,11 @@
 package eu.highgeek.highgeeksync.menus;
 
+import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.objects.ChatChannel;
+import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -9,12 +13,18 @@ import org.bukkit.inventory.ItemStack;
 
 import eu.highgeek.highgeeksync.common.Common;
 import eu.highgeek.highgeeksync.objects.PlayerSettings;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
-public class ChannelSelector implements InventoryHolder {
-    
+import java.util.Arrays;
+
+public final class ChannelSelector implements InventoryHolder
+{
+
+
     private final Inventory inventory;
     private final Player player;
-    private final PlayerSettings playerSettings;
+    private PlayerSettings playerSettings;
 
     public ChannelSelector(Player player){
         this.player = player;
@@ -29,19 +39,82 @@ public class ChannelSelector implements InventoryHolder {
 
 
     public void initializeItems() {
-        for (String channel : playerSettings.joinedChannels) {
-            
+        inventory.clear();
+        inventory.addItem(infoItem());
+        for (ChatChannel chatChannel : ChannelManager.chatChannels){
+            inventory.addItem(generateItemStack(chatChannel));
         }
     }
 
-    public ItemStack leaveChannelItem(String channel){
-        ItemStack itemStack = new ItemStack(Material.RED_WOOL);
+    public ItemStack infoItem(){
+        ItemStack itemStack = new ItemStack(Material.WHITE_WOOL);
+
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName("Usage?");
+
+        meta.setLore(Arrays.asList("BLUE - channel you are talking in",
+                "GREEN - channel you are listening to",
+                "RED - channel you are not connected to",
+                "LEFT click - listen/leave channel",
+                "RIGHT click - set talking channel"));
+        itemStack.setItemMeta(meta);
+
         return itemStack;
     }
 
-    public ItemStack joinChannelItem(String channel){
+    public ItemStack generateItemStack(ChatChannel chatChannel){
+        if(playerSettings.channelOut.contains(chatChannel.name)){
+            return blueChannelItem(chatChannel);
+        }else
+        if(playerSettings.joinedChannels.contains(chatChannel.name)){
+            return leaveChannelItem(chatChannel);
+        }else {
+            return joinChannelItem(chatChannel);
+        }
+    }
+
+    public ItemStack leaveChannelItem(ChatChannel channel){
         ItemStack itemStack = new ItemStack(Material.GREEN_WOOL);
+
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(channel.getFancyName());
+        meta.getPersistentDataContainer().set(NamespacedKey.fromString("channel"), PersistentDataType.STRING, channel.getName());
+
+        meta.setLore(Arrays.asList("Currently listening in", channel.getFancyName()));
+        itemStack.setItemMeta(meta);
+
         return itemStack;
+    }
+
+    public ItemStack joinChannelItem(ChatChannel channel){
+        ItemStack itemStack = new ItemStack(Material.RED_WOOL);
+
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(channel.getFancyName());
+        meta.getPersistentDataContainer().set(NamespacedKey.fromString("channel"), PersistentDataType.STRING, channel.getName());
+
+        meta.setLore(Arrays.asList("Click to join channel", channel.getFancyName()));
+        itemStack.setItemMeta(meta);
+
+        return itemStack;
+    }
+
+    public ItemStack blueChannelItem(ChatChannel channel){
+        ItemStack itemStack = new ItemStack(Material.BLUE_WOOL);
+
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName(channel.getFancyName());
+        meta.getPersistentDataContainer().set(NamespacedKey.fromString("channel"), PersistentDataType.STRING, channel.getName());
+
+        meta.setLore(Arrays.asList("Currently talking in", channel.getFancyName()));
+        itemStack.setItemMeta(meta);
+
+        return itemStack;
+    }
+
+    public void updateInv(){
+        this.playerSettings = Common.playerSettings.get(player);
+        initializeItems();
     }
 
 

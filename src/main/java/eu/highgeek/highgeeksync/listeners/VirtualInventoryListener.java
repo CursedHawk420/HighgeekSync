@@ -6,16 +6,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import eu.highgeek.highgeeksync.menus.ChannelSelector;
+import eu.highgeek.highgeeksync.objects.ChatChannel;
+import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import eu.highgeek.highgeeksync.Main;
@@ -33,6 +39,45 @@ public class VirtualInventoryListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked(); // The player that clicked the item
         if (event.getClickedInventory() != null && event.getCurrentItem() != null){
+            if((player.getOpenInventory().getTopInventory().getHolder() instanceof ChannelSelector )){
+
+                if(event.getClickedInventory().getHolder() instanceof ChannelSelector channelSelector)
+                {
+                    ItemStack itemStack = event.getCurrentItem();
+
+                    if(event.getClick() == ClickType.RIGHT){
+                        ItemStack item = event.getClickedInventory().getItem(event.getClickedInventory().first(Material.BLUE_WOOL));
+                        item = channelSelector.leaveChannelItem(ChannelManager.getChatChannelFromName(item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING)));
+                        event.getClickedInventory().setItem(event.getClickedInventory().first(Material.BLUE_WOOL), item);
+
+                        ChatChannel channel = ChannelManager.getChatChannelFromName(itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING));
+
+                        channelSelector.getInventory().setItem(event.getSlot(), channelSelector.blueChannelItem(channel));
+                        channelSelector.initializeItems();
+
+                        ChannelManager.setChannelOut(ChannelManager.getChatPlayer(player), channel);
+                        channelSelector.updateInv();
+
+                    }
+                    else if (event.getClick() == ClickType.LEFT){
+                        if(itemStack.getType() == Material.RED_WOOL){
+                            ChatChannel channel = ChannelManager.getChatChannelFromName(itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING));
+                            channelSelector.getInventory().setItem(event.getSlot(), channelSelector.leaveChannelItem(channel));
+                            ChannelManager.joinPlayerToChannel(ChannelManager.getChatPlayer(player), channel);
+
+                        }
+                        if(itemStack.getType() == Material.GREEN_WOOL){
+                            ChatChannel channel = ChannelManager.getChatChannelFromName(itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING));
+                            channelSelector.getInventory().setItem(event.getSlot(), channelSelector.joinChannelItem(channel));
+                            ChannelManager.disconnectPlayerFromChannel(ChannelManager.getChatPlayer(player), channel);
+
+                        }
+                    }
+
+                }
+                event.setCancelled(true);
+                return;
+            }
             if((player.getOpenInventory().getTopInventory().getHolder() instanceof VirtualInventoryHolder virtualInventoryHolder))
             {
                 if (event.getCurrentItem().getType() == Material.BARRIER){

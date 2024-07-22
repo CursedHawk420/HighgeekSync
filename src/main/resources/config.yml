@@ -8,7 +8,7 @@ settings:
 
 chat:
   servername: "servername"
-  listentodiscord: false
+  prettyservername: "&2Prettyname"
 
 
 #
@@ -21,7 +21,6 @@ mysql:
   database: "database"
   username: "root"
   password: "supersecret"
-  synctablename: "sync_player_data_table"
   virtualinventorytablename: "sync_redis_data_table"
 
 

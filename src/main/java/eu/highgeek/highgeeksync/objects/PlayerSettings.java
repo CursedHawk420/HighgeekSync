@@ -7,10 +7,12 @@ public class PlayerSettings {
     public String playerName;
     public String playerUuid;
     public List<String> joinedChannels;
+    public String channelOut;
 
-    public PlayerSettings(String playerName, String playerUuid, List<String> joinedChannels){
+    public PlayerSettings(String playerName, String playerUuid, List<String> joinedChannels, String channelOut){
         this.playerName = playerName;
         this.playerUuid = playerUuid;
         this.joinedChannels = joinedChannels;
+        this.channelOut = channelOut;
     }
 }

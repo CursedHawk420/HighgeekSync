@@ -47,6 +47,10 @@
                       <pattern>dev.jorel.commandapi</pattern>
                       <shadedPattern>eu.highgeek.highgeeksync.commandapi</shadedPattern>
                   </relocation>
+                  <relocation>
+                      <pattern>com.saicone.rtag</pattern>
+                      <shadedPattern>${project.groupId}.libs.rtag</shadedPattern>
+                  </relocation>
               </relocations>
           </configuration>
       </plugin>
@@ -114,26 +118,26 @@
           <groupId>com.saicone.rtag</groupId>
           <artifactId>rtag</artifactId>
           <version>1.5.5</version>
-          <scope>provided</scope>
+          <scope>compile</scope>
       </dependency>
       <!-- Other modules -->
       <dependency>
           <groupId>com.saicone.rtag</groupId>
           <artifactId>rtag-block</artifactId>
           <version>1.5.5</version>
-          <scope>provided</scope>
+          <scope>compile</scope>
       </dependency>
       <dependency>
           <groupId>com.saicone.rtag</groupId>
           <artifactId>rtag-entity</artifactId>
           <version>1.5.5</version>
-          <scope>provided</scope>
+          <scope>compile</scope>
       </dependency>
       <dependency>
           <groupId>com.saicone.rtag</groupId>
           <artifactId>rtag-item</artifactId>
           <version>1.5.5</version>
-          <scope>provided</scope>
+          <scope>compile</scope>
       </dependency>
       <dependency>
           <groupId>org.projectlombok</groupId>

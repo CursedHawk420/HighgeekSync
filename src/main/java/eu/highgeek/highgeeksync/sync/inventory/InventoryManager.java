@@ -50,6 +50,7 @@ public class InventoryManager {
             openSpecificInventory(player, invUuid);
 
         }catch (NullPointerException exception){
+            exception.printStackTrace();
             Main.logger.warning("Tried to load invalid default inventory!");
         }
     }

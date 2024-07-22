@@ -9,6 +9,7 @@ import lombok.Setter;
 @Builder
 public class ChatChannel {
     public String name;
+    public String fancyName;
     public String prefix;
     public boolean isLocal;
     public boolean isDefault;

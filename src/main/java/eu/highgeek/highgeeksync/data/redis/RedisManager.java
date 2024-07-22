@@ -3,6 +3,7 @@ package eu.highgeek.highgeeksync.data.redis;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import eu.highgeek.highgeeksync.objects.Message;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -89,7 +90,7 @@ public class RedisManager {
     public static void generateInventoryInRedis(VirtualInventory virtualInventory, String invType){
         String prefix =  invType+":"+virtualInventory.PlayerName+":"+virtualInventory.InvUuid+":";
         for (int i = 0; i < virtualInventory.Size; i++) {
-            setRedis(prefix+i, "{id:\"minecraft:air\"}");
+            setRedis(prefix+i, "{\"id\":\"minecraft:air\"}");
         }
     }
 
@@ -100,11 +101,15 @@ public class RedisManager {
     public static PlayerSettings getPlayerSettings(Player player){
         String playerSettings = getStringRedis("players:settings:"+player.getName());
         if (playerSettings == null){
-            PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.getDefaultChatChannels().stream().map(ChatChannel::getName).collect(Collectors.toList()));
+            PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.getDefaultChatChannels().stream().map(ChatChannel::getName).collect(Collectors.toList()), "global");
             setPlayerSettings(newPlayerSettings);
             return newPlayerSettings;
         }else{
             return gson.fromJson(getStringRedis("players:settings:"+player.getName()), PlayerSettings.class);
         }
+    }
+
+    public static void addChatEntry(Message message){
+        Main.redisConnection.set(message.getUuid(), gson.toJson(message));
     }
 }

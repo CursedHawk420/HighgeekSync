@@ -102,4 +102,17 @@ public class ChannelManager {
         Common.playerSettings.get(chatPlayer.getPlayer()).joinedChannels.remove(chatChannel.name);
         RedisManager.setPlayerSettings(Common.playerSettings.get(chatPlayer.getPlayer()));
     }
+
+    public static void setChannelOut(ChatPlayer chatPlayer, ChatChannel chatChannel){
+        Common.playerSettings.get(chatPlayer.getPlayer()).channelOut = chatChannel.getName();
+        RedisManager.setPlayerSettings(Common.playerSettings.get(chatPlayer.getPlayer()));
+
+        if(!checkPlayerInChannel(chatPlayer, chatChannel)){
+            joinPlayerToChannel(chatPlayer, chatChannel);
+        }
+    }
+
+    public static boolean checkPlayerInChannel(ChatPlayer chatPlayer, ChatChannel chatChannel){
+        return Common.playerSettings.get(chatPlayer.getPlayer()).joinedChannels.contains(chatChannel.getName());
+    }
 }

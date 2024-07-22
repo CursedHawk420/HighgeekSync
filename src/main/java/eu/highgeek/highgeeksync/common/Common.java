@@ -29,6 +29,7 @@ public class Common {
 
     public static void onPlayerQuit(Player player){
         InventoryManager.onPlayerLeave(player);
+        playerSettings.remove(player);
 
         ChannelManager.onPlayerQuit(player);
     }

@@ -13,7 +13,6 @@ public class MySql {
     public static String database = ConfigManager.getString("mysql.database");
     public static String username = ConfigManager.getString("mysql.username");
     public static String password = ConfigManager.getString("mysql.password");
-    public static String mysqltablename = ConfigManager.getString("mysql.synctablename");
     public static String virtualinventorytablename = ConfigManager.getString("mysql.virtualinventorytablename");
     public static Connection connection;
 
@@ -54,14 +53,8 @@ public class MySql {
 
     // Setting up the Database
     public static void registerMySQL() throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SHOW TABLES LIKE '"+mysqltablename+"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("SHOW TABLES LIKE '"+ virtualinventorytablename +"'");
         ResultSet rs = preparedStatement.executeQuery();
-        if (!rs.next()) {
-            PreparedStatement prepareStatementOne = MySql.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS "+mysqltablename+" (player_uuid VARCHAR(100) NOT NULL, player_name VARCHAR(16), inventory TEXT, gamemode VARCHAR(18), health INT(10), food INT(10), enderchest TEXT, exp INT(255), last_joined VARCHAR(255), effects LONGTEXT, advancements LONGTEXT, statistics LONGTEXT, PRIMARY KEY (player_uuid))");
-            prepareStatementOne.executeUpdate();
-        }
-        preparedStatement = connection.prepareStatement("SHOW TABLES LIKE '"+ virtualinventorytablename +"'");
-        rs = preparedStatement.executeQuery();
         if (!rs.next()) {
             PreparedStatement prepareStatementOne = MySql.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS "+ virtualinventorytablename +" (player_uuid VARCHAR(100), player_name VARCHAR(16), inventory_uuid VARCHAR(100) NOT NULL, inventory_name VARCHAR(100), jsondata LONGTEXT, last_updated VARCHAR(255), PRIMARY KEY (inventoryname))");
             prepareStatementOne.executeUpdate();

@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import eu.highgeek.highgeeksync.objects.Message;
+import eu.highgeek.highgeeksync.utils.ConfigManager;
 import eu.highgeek.highgeeksync.utils.VersionHandler;
 
 public class MessageSender {
@@ -12,7 +13,7 @@ public class MessageSender {
     public static PacketContainer createChatPacket(Message message){
 
         final PacketContainer container;
-        String toSend = message.getMessage();
+        String toSend = channelMessageBuilder(message);
 
         if (VersionHandler.isAtLeast_1_20_4()) { // 1.20.4+
             container = new PacketContainer(PacketType.Play.Server.SYSTEM_CHAT);
@@ -33,5 +34,11 @@ public class MessageSender {
             container.getIntegers().write(0, 1);
         }
         return container;
+    }
+
+
+    public static String channelMessageBuilder(Message message){
+        String toSend = "&8["+message.getChannelprefix()+"&8@"+message.getPrettyservername()+"&8] "+ message.getPrefix() + message.getNickname() + message.getSuffix() + ": " + message.getMessage();
+        return  toSend.replaceAll("&", "§");
     }
 }

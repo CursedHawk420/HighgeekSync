@@ -15,10 +15,12 @@ public class ChatPlayer {
 
     private Player player;
     private List<ChatChannel> joinedChannels;
+    private ChatChannel channelOut;
 
-    public ChatPlayer(Player player, List<ChatChannel> joinedChannels){
+    public ChatPlayer(Player player, List<ChatChannel> joinedChannels, ChatChannel channelOut){
         this.player = player;
         this.joinedChannels = joinedChannels;
+        this.channelOut = channelOut;
     }
 
     public ChatPlayer(){

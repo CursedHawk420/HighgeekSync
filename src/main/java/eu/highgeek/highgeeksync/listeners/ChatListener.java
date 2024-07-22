@@ -3,6 +3,9 @@ package eu.highgeek.highgeeksync.listeners;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import eu.highgeek.highgeeksync.common.Common;
+import eu.highgeek.highgeeksync.data.redis.RedisManager;
+import eu.highgeek.highgeeksync.utils.PlaceholderParser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,26 +25,28 @@ import eu.highgeek.highgeeksync.utils.ConfigManager;
 public class ChatListener implements Listener {
 
     public static final String servername = ConfigManager.getString("chat.servername");
+    public static final String prettyServerName = ConfigManager.getString("chat.prettyservername");
 
     @EventHandler
     public void onGameChatMessage(AsyncPlayerChatEvent event){
+        event.setCancelled(true);
         Main.logger.warning("Async onGameChatMessage eventHandler hit");
         String playerUuid = event.getPlayer().getUniqueId().toString();
         String playerName = event.getPlayer().getName();
 
-        //todo fill in correct strings
-        String primaryGroup = event.getEventName();
+
+        String time =  LocalDateTime.now().toString();
+
+        ChatChannel chatChannel = ChannelManager.getChatChannelFromName(Common.playerSettings.get(event.getPlayer()).channelOut);
+        String uuid = "chat:"+chatChannel.getName()+":"+time.replaceAll(":", "-")+":"+playerName;
+        String channelPrefix = chatChannel.getPrefix();
+        String prefix = PlaceholderParser.parsePlaceholders("%vault_prefix%", event.getPlayer());
+        String suffix = PlaceholderParser.parsePlaceholders("%vault_suffix%", event.getPlayer());;
+        String primaryGroup = PlaceholderParser.parsePlaceholders("%luckperms_primary_group_name%", event.getPlayer());
 
 
-        String time =  LocalDateTime.now().toString().replaceAll(":", "-");
-
-        String channel = "todo";
-        String uuid = "chat:"+channel+":"+time+":"+playerName;
-        String channelPrefix = "chPrefix";
-        String prefix = "playerPrefix";
-        String suffix = "playerSuffix";
-
-        sendAsyncChatMessageToPlayers(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, channel, channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId()));
+        RedisManager.addChatEntry(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
+        //sendAsyncChatMessageToPlayers(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
 
     }
 
@@ -53,7 +58,7 @@ public class ChatListener implements Listener {
     }
 
     public void sendAsyncChatMessageToPlayers(Message message){
-        String toSend = message.getMessage();
+
         PacketContainer packetToSend =  MessageSender.createChatPacket(message);
 
         ChatChannel channel = ChannelManager.getChatChannelFromName(message.getChannel());

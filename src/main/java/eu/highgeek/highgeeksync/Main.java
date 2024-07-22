@@ -2,6 +2,7 @@ package eu.highgeek.highgeeksync;
 
 import java.util.logging.Logger;
 
+import eu.highgeek.highgeeksync.commands.ChannelCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -77,8 +78,9 @@ public final class Main extends JavaPlugin implements Listener {
         registerListener();
 
         ChatInitializer.channelInitializer();
-        
+
         CommandAPI.registerCommand(VinvCommand.class);
+        CommandAPI.registerCommand(ChannelCommand.class);
     }
 
     @Override

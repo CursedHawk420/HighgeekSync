@@ -25,8 +25,9 @@ public class Message {
     private String suffix;
     @Nullable
     private UUID playeruuid;
+    private String prettyservername;
 
-    public Message(String uuid, String username, String nickname, String message, String primarygroup, String datetime, String channel, String channelprefix, String source, String servername, String prefix, String suffix, UUID playeruuid){
+    public Message(String uuid, String username, String nickname, String message, String primarygroup, String datetime, String channel, String channelprefix, String source, String servername, String prefix, String suffix, UUID playeruuid, String prettyservername){
         this.uuid = uuid;
         this.username = username;
         this.nickname = nickname;
@@ -40,6 +41,7 @@ public class Message {
         this.prefix = prefix;
         this.suffix = suffix;
         this.playeruuid = playeruuid;
+        this.prettyservername = prettyservername;
     }
 
 
