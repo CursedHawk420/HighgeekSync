@@ -3,6 +3,7 @@ package eu.highgeek.highgeeksync;
 import java.util.logging.Logger;
 
 import eu.highgeek.highgeeksync.commands.ChannelCommand;
+import eu.highgeek.highgeeksync.objects.PlayerList;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -37,7 +38,6 @@ public final class Main extends JavaPlugin implements Listener {
     public static Jedis redisConnection;
     public static BukkitTask redisListenerTask;
     public static ProtocolManager protocolManager;
-    public static AsynchronousManager asynchronousProtocolManager;
 
     public void registerListener() {
         PluginManager pluginManager = Bukkit.getPluginManager();
@@ -65,7 +65,6 @@ public final class Main extends JavaPlugin implements Listener {
         checkDependencies();
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-        asynchronousProtocolManager = protocolManager.getAsynchronousManager();
 
 
         MySql.initMysql();
@@ -87,7 +86,11 @@ public final class Main extends JavaPlugin implements Listener {
     public void onDisable() {
         // Plugin shutdown logic
 
+        PlayerList.onShutDown();
+
         RedisEventListener.listenerStopper();
+        Main.redisConnection.disconnect();
+        Main.redisConnection.close();
         MySql.disconnectMySQL();
     }
 
