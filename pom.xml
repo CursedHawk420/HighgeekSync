@@ -64,6 +64,10 @@
   </build>
 
   <repositories>
+    <repository>
+        <id>auxilor</id>
+        <url>https://repo.auxilor.io/repository/maven-public/</url>
+    </repository>
       <repository>
           <id>dmulloy2-repo</id>
           <url>https://repo.dmulloy2.net/repository/public/</url>
@@ -172,5 +176,11 @@
           <artifactId>jline</artifactId>
           <version>2.12.1</version>
       </dependency>
+      <dependency>
+        <groupId>com.willfp</groupId>
+        <artifactId>eco</artifactId>
+        <version>6.73.0</version>
+        <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>
