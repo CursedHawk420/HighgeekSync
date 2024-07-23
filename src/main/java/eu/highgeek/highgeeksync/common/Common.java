@@ -2,6 +2,9 @@ package eu.highgeek.highgeeksync.common;
 
 import java.util.HashMap;
 
+import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.objects.PlayerList;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
@@ -25,6 +28,8 @@ public class Common {
         //playerSettings.add(playerSetting);
 
         ChannelManager.onPlayerJoin(playerSetting, player);
+
+        PlayerList.updatePlayerList();
     }
 
     public static void onPlayerQuit(Player player){
@@ -32,6 +37,13 @@ public class Common {
         playerSettings.remove(player);
 
         ChannelManager.onPlayerQuit(player);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.main, new Runnable() {
+            @Override
+            public void run() {
+                PlayerList.updatePlayerList();
+            }
+        }, 20);
     }
 
 

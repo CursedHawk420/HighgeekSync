@@ -16,7 +16,6 @@ import com.saicone.rtag.item.ItemTagStream;
 
 public class ItemStackAdapter {
     public static Gson gson = new GsonBuilder()
-            .setLenient()
             .setPrettyPrinting()
             .create();
 
