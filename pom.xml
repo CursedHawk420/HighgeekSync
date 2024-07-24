@@ -64,7 +64,7 @@
   </build>
 
   <repositories>
-    <repository>
+      <repository>
         <id>auxilor</id>
         <url>https://repo.auxilor.io/repository/maven-public/</url>
     </repository>
@@ -182,5 +182,6 @@
         <version>6.73.0</version>
         <scope>provided</scope>
     </dependency>
+
   </dependencies>
 </project>
