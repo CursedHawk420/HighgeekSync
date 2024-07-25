@@ -22,6 +22,9 @@ mysql:
   username: "root"
   password: "supersecret"
   virtualinventorytablename: "sync_redis_data_table"
+  discordtableaccounts: "discord_accounts"
+  discordtablecodes: "discord_codes"
+
 
 
 #

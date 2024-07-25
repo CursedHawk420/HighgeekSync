@@ -3,7 +3,7 @@ package eu.highgeek.highgeeksync.data.redis;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import eu.highgeek.highgeeksync.objects.Message;
+import eu.highgeek.highgeeksync.objects.*;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,9 +12,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.objects.ChatChannel;
-import eu.highgeek.highgeeksync.objects.PlayerSettings;
-import eu.highgeek.highgeeksync.objects.VirtualInventory;
 import eu.highgeek.highgeeksync.sync.adapters.ItemStackAdapter;
 import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
@@ -35,18 +32,20 @@ public class RedisManager {
             .setPrettyPrinting()
             .create();
 
-    public static boolean initRedis(){
-        Main.redisConnection = RedisManager.setupRedis();
-        if (Main.redisConnection != null){
-            RedisEventListener.listenerStarter(Main.main, RedisManager.setupRedis());
-            Main.logger.warning("Redis connected successfully! \n");
-            return true;
-        }else {
-            Main.logger.warning("Redis connection failed! \n");
-            return false;
+    public static void initRedis(){
+        try {
+            Main.redisConnection = RedisManager.setupRedis();
+            if (Main.redisConnection != null){
+                if (Main.redisConnection.getConnection() != null){
+                    RedisEventListener.listenerStarter(Main.main, RedisManager.setupRedis());
+                    Main.logger.warning("Redis connected successfully! \n");
+                }else {
+                    Main.logger.warning("Redis connection failed! \n");
+                }
+            }
+        }catch (JedisException e){
+            Main.logger.warning("Redis connection failed! \n" + e.getStackTrace().toString());
         }
-
-
     }
 
     public static Jedis setupRedis() {
@@ -65,10 +64,16 @@ public class RedisManager {
     }
 
     public static String getStringRedis(String key){
+        if(Main.redisConnection.getConnection() == null){
+            initRedis();
+        }
         return Main.redisConnection.get(key);
     }
 
     public static void setRedis(String key, String toSet){
+        if(Main.redisConnection.getConnection() == null){
+            initRedis();
+        }
         Main.redisConnection.set(key, toSet);
     }
 
@@ -82,7 +87,9 @@ public class RedisManager {
     }
 
     public static Set<String> getKeysPrefix(String prefix){
-        Main.logger.warning("Getting keys with prefix: " + prefix);
+        if(Main.redisConnection.getConnection() == null){
+            initRedis();
+        }
         return Main.redisConnection.keys(prefix);
     }
 

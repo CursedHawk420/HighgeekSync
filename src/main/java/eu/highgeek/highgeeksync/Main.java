@@ -3,6 +3,7 @@ package eu.highgeek.highgeeksync;
 import java.util.logging.Logger;
 
 import eu.highgeek.highgeeksync.commands.ChannelCommand;
+import eu.highgeek.highgeeksync.commands.LinkCommand;
 import eu.highgeek.highgeeksync.objects.PlayerList;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -78,8 +79,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         ChatInitializer.channelInitializer();
 
-        CommandAPI.registerCommand(VinvCommand.class);
-        CommandAPI.registerCommand(ChannelCommand.class);
+        registerCommands();
     }
 
     @Override
@@ -92,6 +92,12 @@ public final class Main extends JavaPlugin implements Listener {
         Main.redisConnection.disconnect();
         Main.redisConnection.close();
         MySql.disconnectMySQL();
+    }
+
+    private void registerCommands(){
+        CommandAPI.registerCommand(VinvCommand.class);
+        CommandAPI.registerCommand(ChannelCommand.class);
+        CommandAPI.registerCommand(LinkCommand.class);
     }
 
     private void checkDependencies(){
