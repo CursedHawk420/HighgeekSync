@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.common.Common;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
 import eu.highgeek.highgeeksync.objects.VirtualInventory;
@@ -29,6 +30,10 @@ public class InventoryManager {
         if(playerInventoriesList.isEmpty()){
             createVirtualInventory(player, "default");
             createWebInventory(player,"default");
+
+            Common.onFistJoin(player);
+        }else{
+            Common.onPlayerComeback(player);
         }
         playerInventories.put(player.getUniqueId(), playerInventoriesList);
     }

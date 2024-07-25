@@ -26,6 +26,10 @@ public class ChannelManager {
     public static void onPlayerJoin(PlayerSettings playerSettings, Player player){
         ChatPlayer chatPlayer = new ChatPlayer();
         chatPlayer.setPlayer(player);
+        joinPlayerToChannels(chatPlayer, playerSettings);
+    }
+
+    public static void joinPlayerToChannels(ChatPlayer chatPlayer, PlayerSettings playerSettings){
         List<ChatChannel> playerChannels = new ArrayList<>();
 
         Main.logger.warning("Player channels: ");

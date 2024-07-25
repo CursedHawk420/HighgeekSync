@@ -1,15 +1,15 @@
 package eu.highgeek.highgeeksync.commands;
 
+import java.time.Instant;
+import java.util.Random;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import dev.jorel.commandapi.annotations.Command;
 import dev.jorel.commandapi.annotations.Default;
 import eu.highgeek.highgeeksync.data.sql.MysqlDiscord;
 import eu.highgeek.highgeeksync.objects.StatusCode;
-import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.time.Instant;
-import java.util.Random;
 
 @Command("link")
 public class LinkCommand {

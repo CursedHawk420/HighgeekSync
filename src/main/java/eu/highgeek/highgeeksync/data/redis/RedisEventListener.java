@@ -3,16 +3,20 @@ package eu.highgeek.highgeeksync.data.redis;
 import static eu.highgeek.highgeeksync.Main.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import eu.highgeek.highgeeksync.Main;
+import eu.highgeek.highgeeksync.common.Common;
 import eu.highgeek.highgeeksync.events.AsyncRedisChatSetEvent;
 import eu.highgeek.highgeeksync.events.RedisInventorySetEvent;
 import eu.highgeek.highgeeksync.events.RedisNewInventoryEvent;
 import eu.highgeek.highgeeksync.objects.Message;
+import eu.highgeek.highgeeksync.objects.PlayerSettings;
+import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
 import eu.highgeek.highgeeksync.sync.inventory.InventoryManager;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
@@ -51,10 +55,24 @@ public class RedisEventListener extends JedisPubSub {
                 case "newinventory":
                     fireNewInventoryEvent(message);
                     Main.logger.warning("Switch newinventory hit: " + message);
-
                     return;
+                case "players":
+                    firePlayersEvent(message);
+                    Main.logger.warning("Switch newinventory hit: " + message);
+                return;
                 default:
                     return;
+            }
+        }
+    }
+
+    public static void firePlayersEvent(String message){
+        if (message.contains("settings")){
+            PlayerSettings playerSettings = gson.fromJson(RedisManager.getStringRedis(message), PlayerSettings.class);
+            Player player = Bukkit.getPlayer(playerSettings.playerName);
+            if(Common.playerSettings.containsKey(player)){
+                Common.playerSettings.replace(player, playerSettings);
+                ChannelManager.joinPlayerToChannels(ChannelManager.getChatPlayer(player), playerSettings);
             }
         }
     }

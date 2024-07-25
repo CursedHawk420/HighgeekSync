@@ -1,8 +1,7 @@
 package eu.highgeek.highgeeksync.menus;
 
-import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.objects.ChatChannel;
-import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -10,13 +9,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
-import eu.highgeek.highgeeksync.common.Common;
-import eu.highgeek.highgeeksync.objects.PlayerSettings;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Arrays;
+import eu.highgeek.highgeeksync.common.Common;
+import eu.highgeek.highgeeksync.objects.ChatChannel;
+import eu.highgeek.highgeeksync.objects.PlayerSettings;
+import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
+import eu.highgeek.highgeeksync.sync.chat.DiscordUtil;
 
 public final class ChannelSelector implements InventoryHolder
 {
@@ -44,6 +44,7 @@ public final class ChannelSelector implements InventoryHolder
         for (ChatChannel chatChannel : ChannelManager.chatChannels){
             inventory.addItem(generateItemStack(chatChannel));
         }
+        inventory.setItem(inventory.getSize() - 1, discordChannelItem());
     }
 
     public ItemStack infoItem(){
@@ -110,6 +111,28 @@ public final class ChannelSelector implements InventoryHolder
         itemStack.setItemMeta(meta);
 
         return itemStack;
+    }
+
+    public ItemStack discordChannelItem(){
+
+        if(playerSettings.hasConnectedDiscord){
+            ItemStack itemStack = new ItemStack(Material.BLUE_WOOL);
+            ItemMeta meta = itemStack.getItemMeta();
+            meta.setDisplayName("Discord");
+            meta.setLore(Arrays.asList("Integration is connected"));
+            itemStack.setItemMeta(meta);
+            return itemStack;
+        }else{
+            ItemStack itemStack = new ItemStack(Material.RED_WOOL);
+            ItemMeta meta = itemStack.getItemMeta();
+            meta.setDisplayName("Discord");
+            meta.setLore(Arrays.asList("Integration is disconnected.", "To link your game account with Discord", "send Dicrect Message to our Discord bot ", "with code: "+ DiscordUtil.codeMap.get(player)));
+            itemStack.setItemMeta(meta);
+            return itemStack;
+        }
+
+
+
     }
 
     public void updateInv(){

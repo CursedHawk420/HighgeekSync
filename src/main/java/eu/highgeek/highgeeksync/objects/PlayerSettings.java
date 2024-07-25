@@ -8,6 +8,7 @@ public class PlayerSettings {
     public String playerUuid;
     public List<String> joinedChannels;
     public String channelOut;
+    public boolean hasConnectedDiscord;
 
     public PlayerSettings(String playerName, String playerUuid, List<String> joinedChannels, String channelOut){
         this.playerName = playerName;
