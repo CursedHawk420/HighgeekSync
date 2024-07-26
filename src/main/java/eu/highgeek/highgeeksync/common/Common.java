@@ -17,14 +17,14 @@ public class Common {
 
     //public static List<PlayerSettings> playerSettings = new ArrayList<>();
 
-    public static HashMap<Player, PlayerSettings> playerSettings = new HashMap<>();
+    public static HashMap<String, PlayerSettings> playerSettings = new HashMap<>();
 
     public static void onPlayerJoin(Player player){
 
         InventoryManager.onPlayerJoin(player);
 
         PlayerSettings playerSetting = RedisManager.getPlayerSettings(player);
-        playerSettings.put(player, playerSetting);
+        playerSettings.put(player.getName(), playerSetting);
         
         //playerSettings.add(playerSetting);
 
@@ -45,7 +45,7 @@ public class Common {
 
     public static void onPlayerQuit(Player player){
         InventoryManager.onPlayerLeave(player);
-        playerSettings.remove(player);
+        playerSettings.remove(player.getName());
         DiscordUtil.codeMap.remove(player);
 
         ChannelManager.onPlayerQuit(player);

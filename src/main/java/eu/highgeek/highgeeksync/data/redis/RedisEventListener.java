@@ -2,6 +2,8 @@ package eu.highgeek.highgeeksync.data.redis;
 
 import static eu.highgeek.highgeeksync.Main.*;
 
+import eu.highgeek.highgeeksync.menus.ChannelSelector;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -69,10 +71,14 @@ public class RedisEventListener extends JedisPubSub {
     public static void firePlayersEvent(String message){
         if (message.contains("settings")){
             PlayerSettings playerSettings = gson.fromJson(RedisManager.getStringRedis(message), PlayerSettings.class);
-            Player player = Bukkit.getPlayer(playerSettings.playerName);
-            if(Common.playerSettings.containsKey(player)){
-                Common.playerSettings.replace(player, playerSettings);
-                ChannelManager.joinPlayerToChannels(ChannelManager.getChatPlayer(player), playerSettings);
+            if(Common.playerSettings.containsKey(playerSettings.playerName)){
+                Common.playerSettings.replace(playerSettings.playerName, playerSettings);
+                ChannelManager.joinPlayerToChannels(ChannelManager.getChatPlayer(playerSettings.playerName), playerSettings);
+                if(ChannelManager.openedSelectors.containsKey(playerSettings.playerName)){
+                    ChannelSelector channelSelector = ChannelManager.openedSelectors.get(playerSettings.playerName);
+                    channelSelector.playerSettings = playerSettings;
+                    channelSelector.initializeItems();
+                }
             }
         }
     }
@@ -94,7 +100,7 @@ public class RedisEventListener extends JedisPubSub {
                 }
             },0);
         }catch (Exception exception){
-            Main.logger.warning("error: " + exception.getMessage());
+            Main.logger.warning("error: " + ExceptionUtils.getStackTrace(exception));
         }
     }
 
@@ -113,7 +119,7 @@ public class RedisEventListener extends JedisPubSub {
                 },0);
             }
         }catch (Exception exception){
-            Main.logger.warning("error: " + exception.getMessage());
+            Main.logger.warning("error: " + ExceptionUtils.getStackTrace(exception));
         }
     }
 

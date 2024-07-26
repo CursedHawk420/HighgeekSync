@@ -45,4 +45,11 @@ public class PlayerList {
         playerList.status = "offline";
         RedisManager.setRedis("server:"+playerList.getServerName()+":playerlist" ,gson.toJson(playerList, PlayerList.class));
     }
+
+    public static void onStart(){
+        PlayerList playerList = new PlayerList();
+        playerList.playerList.clear();
+        playerList.status = "online";
+        RedisManager.setRedis("server:"+playerList.getServerName()+":playerlist" ,gson.toJson(playerList, PlayerList.class));
+    }
 }

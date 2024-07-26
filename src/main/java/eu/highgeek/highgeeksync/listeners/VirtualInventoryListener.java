@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import eu.highgeek.highgeeksync.menus.ChannelSelector;
 import eu.highgeek.highgeeksync.objects.ChatChannel;
+import eu.highgeek.highgeeksync.objects.PlayerSettings;
 import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,7 +41,7 @@ public class VirtualInventoryListener implements Listener {
         Player player = (Player) event.getWhoClicked(); // The player that clicked the item
         if (event.getClickedInventory() != null && event.getCurrentItem() != null){
             if((player.getOpenInventory().getTopInventory().getHolder() instanceof ChannelSelector )){
-
+                event.setCancelled(true);
                 if(event.getClickedInventory().getHolder() instanceof ChannelSelector channelSelector)
                 {
                     ItemStack itemStack = event.getCurrentItem();
@@ -55,7 +56,15 @@ public class VirtualInventoryListener implements Listener {
                         channelSelector.getInventory().setItem(event.getSlot(), channelSelector.blueChannelItem(channel));
                         channelSelector.initializeItems();
 
-                        ChannelManager.setChannelOut(ChannelManager.getChatPlayer(player), channel);
+                        //ChannelManager.setChannelOut(ChannelManager.getChatPlayer(player.getName()), channel);
+
+                        channelSelector.playerSettings.channelOut = channel.name;
+
+                        if(!channelSelector.playerSettings.joinedChannels.contains(channel.name)){
+                            channelSelector.playerSettings.joinedChannels.add(channel.name);
+                        }
+                        RedisManager.setPlayerSettings(channelSelector.playerSettings);
+
                         channelSelector.updateInv();
 
                     }
@@ -63,19 +72,26 @@ public class VirtualInventoryListener implements Listener {
                         if(itemStack.getType() == Material.RED_WOOL){
                             ChatChannel channel = ChannelManager.getChatChannelFromName(itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING));
                             channelSelector.getInventory().setItem(event.getSlot(), channelSelector.leaveChannelItem(channel));
-                            ChannelManager.joinPlayerToChannel(ChannelManager.getChatPlayer(player), channel);
+
+                            //ChannelManager.joinPlayerToChannel(ChannelManager.getChatPlayer(player.getName()), channel);
+
+
+                            channelSelector.playerSettings.joinedChannels.add(channel.name);
+                            RedisManager.setPlayerSettings(channelSelector.playerSettings);
 
                         }
                         if(itemStack.getType() == Material.GREEN_WOOL){
                             ChatChannel channel = ChannelManager.getChatChannelFromName(itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING));
                             channelSelector.getInventory().setItem(event.getSlot(), channelSelector.joinChannelItem(channel));
-                            ChannelManager.disconnectPlayerFromChannel(ChannelManager.getChatPlayer(player), channel);
+                            //ChannelManager.disconnectPlayerFromChannel(ChannelManager.getChatPlayer(player.getName()), channel);
+
+                            channelSelector.playerSettings.joinedChannels.remove(channel.name);
+                            RedisManager.setPlayerSettings(channelSelector.playerSettings);
 
                         }
                     }
 
                 }
-                event.setCancelled(true);
                 return;
             }
             if((player.getOpenInventory().getTopInventory().getHolder() instanceof VirtualInventoryHolder virtualInventoryHolder))
@@ -157,6 +173,10 @@ public class VirtualInventoryListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event){
         Player player = (Player) event.getPlayer();
+        if(player.getOpenInventory().getTopInventory().getHolder() instanceof ChannelSelector channelSelector){
+
+            ChannelManager.openedSelectors.remove(player.getName());
+        }
         if((player.getOpenInventory().getTopInventory().getHolder() instanceof VirtualInventoryHolder virtualInventoryHolder))
         {
             List<UUID> players = InventoryManager.openedInventories.get(virtualInventoryHolder.getInventoryUuid());

@@ -1,9 +1,11 @@
 package eu.highgeek.highgeeksync.data.redis;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import eu.highgeek.highgeeksync.objects.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +46,7 @@ public class RedisManager {
                 }
             }
         }catch (JedisException e){
-            Main.logger.warning("Redis connection failed! \n" + e.getStackTrace().toString());
+            Main.logger.warning("Redis connection failed! \n" + ExceptionUtils.getStackTrace(e));
         }
     }
 
@@ -108,7 +110,7 @@ public class RedisManager {
     public static PlayerSettings getPlayerSettings(Player player){
         String playerSettings = getStringRedis("players:settings:"+player.getName());
         if (playerSettings == null){
-            PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.getDefaultChatChannels().stream().map(ChatChannel::getName).collect(Collectors.toList()), "global");
+            PlayerSettings newPlayerSettings = new PlayerSettings(player.getName(), player.getUniqueId().toString(), ChannelManager.getDefaultChatChannels().stream().map(ChatChannel::getName).collect(Collectors.toList()), "global", false, new ArrayList<>());
             setPlayerSettings(newPlayerSettings);
             return newPlayerSettings;
         }else{

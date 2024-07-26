@@ -6,6 +6,7 @@ import java.util.List;
 import eu.highgeek.highgeeksync.common.Common;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.utils.PlaceholderParser;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,24 +31,30 @@ public class ChatListener implements Listener {
     @EventHandler
     public void onGameChatMessage(AsyncPlayerChatEvent event){
         event.setCancelled(true);
-        Main.logger.warning("Async onGameChatMessage eventHandler hit");
-        String playerUuid = event.getPlayer().getUniqueId().toString();
-        String playerName = event.getPlayer().getName();
-
-
-        String time =  LocalDateTime.now().toString();
-
-        ChatChannel chatChannel = ChannelManager.getChatChannelFromName(Common.playerSettings.get(event.getPlayer()).channelOut);
-        String uuid = "chat:"+chatChannel.getName()+":"+time.replaceAll(":", "-")+":"+playerName;
-        String channelPrefix = chatChannel.getPrefix();
-        String prefix = PlaceholderParser.parsePlaceholders("%vault_prefix%", event.getPlayer());
-        String suffix = PlaceholderParser.parsePlaceholders("%vault_suffix%", event.getPlayer());;
-        String primaryGroup = PlaceholderParser.parsePlaceholders("%luckperms_primary_group_name%", event.getPlayer());
-
-
-        RedisManager.addChatEntry(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
         //sendAsyncChatMessageToPlayers(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
+        setRedisMessageAsync(event);
+    }
+    public void setRedisMessageAsync(AsyncPlayerChatEvent event){
+        Bukkit.getScheduler().runTaskAsynchronously(Main.main, new Runnable() {
+            @Override
+            public void run() {
+                Main.logger.warning("Async onGameChatMessage eventHandler hit");
+                String playerUuid = event.getPlayer().getUniqueId().toString();
+                String playerName = event.getPlayer().getName();
 
+
+                String time =  LocalDateTime.now().toString();
+
+                ChatChannel chatChannel = ChannelManager.getChatChannelFromName(Common.playerSettings.get(event.getPlayer().getName()).channelOut);
+                Main.logger.warning("Channel out used: " + chatChannel.getName());
+                String uuid = "chat:"+chatChannel.getName()+":"+time.replaceAll(":", "-")+":"+playerName;
+                String channelPrefix = chatChannel.getPrefix();
+                String prefix = PlaceholderParser.parsePlaceholders("%vault_prefix%", event.getPlayer());
+                String suffix = PlaceholderParser.parsePlaceholders("%vault_suffix%", event.getPlayer());;
+                String primaryGroup = PlaceholderParser.parsePlaceholders("%luckperms_primary_group_name%", event.getPlayer());
+                RedisManager.addChatEntry(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
+            }
+        });
     }
 
 

@@ -9,11 +9,14 @@ public class PlayerSettings {
     public List<String> joinedChannels;
     public String channelOut;
     public boolean hasConnectedDiscord;
+    public List<String> mutedPlayers;
 
-    public PlayerSettings(String playerName, String playerUuid, List<String> joinedChannels, String channelOut){
+    public PlayerSettings(String playerName, String playerUuid, List<String> joinedChannels, String channelOut, boolean hasConnectedDiscord, List<String> mutedPlayers){
         this.playerName = playerName;
         this.playerUuid = playerUuid;
         this.joinedChannels = joinedChannels;
         this.channelOut = channelOut;
+        this.hasConnectedDiscord = hasConnectedDiscord;
+        this.mutedPlayers = mutedPlayers;
     }
 }

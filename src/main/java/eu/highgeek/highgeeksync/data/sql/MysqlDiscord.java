@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -42,9 +43,9 @@ public class MysqlDiscord {
                 exception.printStackTrace();
                 Main.logger.warning("Something went wrong with saving discord link code for player \""+playeruuid+"\"!");
             }
-            return new StatusCode("MysqlDiscord.saveLinkCode()" , "Saving new discord link code in database failed. ", exception.getStackTrace().toString(), playeruuid);
+            return new StatusCode("MysqlDiscord.saveLinkCode()" , "Saving new discord link code in database failed. ", ExceptionUtils.getStackTrace(exception), playeruuid);
         }catch (Exception exception){
-            return new StatusCode("MysqlDiscord.saveLinkCode()" , "Saving new discord link code in database failed. ", exception.getStackTrace().toString(), playeruuid);
+            return new StatusCode("MysqlDiscord.saveLinkCode()" , "Saving new discord link code in database failed. ", ExceptionUtils.getStackTrace(exception), playeruuid);
         }
     }
 

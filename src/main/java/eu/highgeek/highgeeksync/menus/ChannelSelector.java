@@ -24,16 +24,16 @@ public final class ChannelSelector implements InventoryHolder
 
     private final Inventory inventory;
     private final Player player;
-    private PlayerSettings playerSettings;
+    public PlayerSettings playerSettings;
 
     public ChannelSelector(Player player){
         this.player = player;
         this.inventory = Bukkit.createInventory(this, 9, "Channel Selector");
 
-        this.playerSettings = Common.playerSettings.get(player);
+        this.playerSettings = Common.playerSettings.get(player.getName());
 
         initializeItems();
-
+        ChannelManager.openedSelectors.put(player.getName(), this);
         player.openInventory(inventory);
     }
 
@@ -126,7 +126,7 @@ public final class ChannelSelector implements InventoryHolder
             ItemStack itemStack = new ItemStack(Material.RED_WOOL);
             ItemMeta meta = itemStack.getItemMeta();
             meta.setDisplayName("Discord");
-            meta.setLore(Arrays.asList("Integration is disconnected.", "To link your game account with Discord", "send Dicrect Message to our Discord bot ", "with code: "+ DiscordUtil.codeMap.get(player)));
+            meta.setLore(Arrays.asList("Integration is disconnected.", "To link your game account with Discord", "send Direct Message to our Discord bot ", "with code: "+ DiscordUtil.codeMap.get(player)));
             itemStack.setItemMeta(meta);
             return itemStack;
         }
@@ -136,7 +136,7 @@ public final class ChannelSelector implements InventoryHolder
     }
 
     public void updateInv(){
-        this.playerSettings = Common.playerSettings.get(player);
+        this.playerSettings = Common.playerSettings.get(player.getName());
         initializeItems();
     }
 

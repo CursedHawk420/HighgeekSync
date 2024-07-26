@@ -2,6 +2,7 @@ package eu.highgeek.highgeeksync.sync.chat;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ public class DiscordUtil {
 
     public static void generateLinkingCode(Player player){
         String linkingCode = RandomStringUtils.randomAlphanumeric(6);
+        linkingCode = linkingCode.toUpperCase(Locale.ROOT);
         MysqlDiscord.saveLinkCode(player.getUniqueId().toString(), linkingCode, Instant.now().toEpochMilli() + 172800000);
         
         codeMap.put(player, linkingCode);
