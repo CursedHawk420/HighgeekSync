@@ -1,6 +1,8 @@
 package eu.highgeek.highgeeksync.listeners;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import eu.highgeek.highgeeksync.common.Common;
@@ -43,7 +45,7 @@ public class ChatListener implements Listener {
                 String playerName = event.getPlayer().getName();
 
 
-                String time =  LocalDateTime.now().toString();
+                String time =  Instant.now().toString();
 
                 ChatChannel chatChannel = ChannelManager.getChatChannelFromName(Common.playerSettings.get(event.getPlayer().getName()).channelOut);
                 Main.logger.warning("Channel out used: " + chatChannel.getName());
