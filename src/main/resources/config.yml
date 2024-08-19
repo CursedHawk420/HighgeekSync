@@ -10,7 +10,9 @@ chat:
   servername: "servername"
   prettyservername: "&2Prettyname"
 
-
+playerlist:
+  position: 1
+  visible: true
 #
 # MySQL
 #

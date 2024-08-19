@@ -18,6 +18,8 @@ public class PlayerList {
 
     private final String serverName;
     private String status;
+    private boolean visible;
+    private int position;
     private final List<String> playerList;
 
 
@@ -25,6 +27,8 @@ public class PlayerList {
         this.playerList = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
         this.serverName = ConfigManager.getString("chat.servername");
         this.status = "online";
+        this.visible = ConfigManager.getBoolean("playerlist.visible");
+        this.position = ConfigManager.config.getInt("playerlist.position");
     }
 
 
