@@ -152,12 +152,12 @@
       <dependency>
           <groupId>dev.jorel</groupId>
           <artifactId>commandapi-bukkit-shade</artifactId>
-          <version>9.5.0</version>
+          <version>9.5.3</version>
       </dependency>
       <dependency>
           <groupId>dev.jorel</groupId>
           <artifactId>commandapi-annotations</artifactId>
-          <version>9.5.0</version>
+          <version>9.5.3</version>
       </dependency>
       <dependency>
           <groupId>me.clip</groupId>
@@ -179,7 +179,7 @@
       <dependency>
         <groupId>com.willfp</groupId>
         <artifactId>eco</artifactId>
-        <version>6.73.0</version>
+        <version>6.73.4</version>
         <scope>provided</scope>
     </dependency>
 
