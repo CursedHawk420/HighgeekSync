@@ -2,6 +2,7 @@ package eu.highgeek.highgeeksync.data.redis;
 
 import static eu.highgeek.highgeeksync.Main.*;
 
+import eu.highgeek.highgeeksync.events.RedisEconomyPayEvent;
 import eu.highgeek.highgeeksync.menus.ChannelSelector;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
@@ -60,11 +61,21 @@ public class RedisEventListener extends JedisPubSub {
                     return;
                 case "players":
                     firePlayersEvent(message);
-                    Main.logger.warning("Switch newinventory hit: " + message);
+                    Main.logger.warning("Switch players hit: " + message);
+                case "economy":
+                    fireEconomyEvent(message);
+                    Main.logger.warning("Switch economy hit: " + message);
                 return;
                 default:
                     return;
             }
+        }
+    }
+
+    public static void fireEconomyEvent(String message){
+        if (message.contains("pay")){
+            RedisEconomyPayEvent event = new RedisEconomyPayEvent(RedisManager.getStringRedis(message), message, true);
+            Bukkit.getPluginManager().callEvent(event);
         }
     }
 

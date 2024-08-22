@@ -4,10 +4,12 @@ import java.util.logging.Logger;
 
 import eu.highgeek.highgeeksync.commands.ChannelCommand;
 import eu.highgeek.highgeeksync.objects.PlayerList;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -37,6 +39,7 @@ public final class Main extends JavaPlugin implements Listener {
     public static Jedis redisConnection;
     public static BukkitTask redisListenerTask;
     public static ProtocolManager protocolManager;
+    public static Economy econ = null;
 
     public void registerListener() {
         PluginManager pluginManager = Bukkit.getPluginManager();
@@ -60,6 +63,11 @@ public final class Main extends JavaPlugin implements Listener {
         logger = this.getLogger();
         saveDefaultConfig();
         ConfigManager.reload();
+        if (!setupEconomy() ) {
+            getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         checkDependencies();
 
@@ -109,4 +117,17 @@ public final class Main extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
+
 }
