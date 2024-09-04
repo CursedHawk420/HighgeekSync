@@ -74,8 +74,14 @@ public class RedisEventListener extends JedisPubSub {
 
     public static void fireEconomyEvent(String message){
         if (message.contains("pay")){
-            RedisEconomyPayEvent event = new RedisEconomyPayEvent(RedisManager.getStringRedis(message), message, true);
-            Bukkit.getPluginManager().callEvent(event);
+
+            main.getServer().getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+                @Override
+                public void run() {
+                    RedisEconomyPayEvent event = new RedisEconomyPayEvent(RedisManager.getStringRedis(message), message, false);
+                    Bukkit.getPluginManager().callEvent(event);
+                }
+            },0);
         }
     }
 
