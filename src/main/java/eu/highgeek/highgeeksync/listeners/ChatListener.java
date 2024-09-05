@@ -30,9 +30,8 @@ public class ChatListener implements Listener {
     public static final String servername = ConfigManager.getString("chat.servername");
     public static final String prettyServerName = ConfigManager.getString("chat.prettyservername");
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onGameChatMessage(AsyncPlayerChatEvent event){
-        event.setCancelled(true);
         //sendAsyncChatMessageToPlayers(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
         setRedisMessageAsync(event);
     }
@@ -55,6 +54,7 @@ public class ChatListener implements Listener {
                 String suffix = PlaceholderParser.parsePlaceholders("%vault_suffix%", event.getPlayer());;
                 String primaryGroup = PlaceholderParser.parsePlaceholders("%luckperms_primary_group_name%", event.getPlayer());
                 RedisManager.addChatEntry(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
+                event.setCancelled(true);
             }
         });
     }

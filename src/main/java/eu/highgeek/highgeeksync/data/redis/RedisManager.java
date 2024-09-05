@@ -1,6 +1,7 @@
 package eu.highgeek.highgeeksync.data.redis;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -120,5 +121,13 @@ public class RedisManager {
 
     public static void addChatEntry(Message message){
         Main.redisConnection.set(message.getUuid(), gson.toJson(message));
+    }
+
+    public static List<String> getGeneratedPlayerList(){
+        ArrayList<String> list = new ArrayList<>();
+        for (String string : getKeysPrefix("players:settings:*")){
+            list.add(string.substring(string.lastIndexOf(":") + 1));
+        }
+        return list;
     }
 }
