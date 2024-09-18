@@ -3,6 +3,7 @@ package eu.highgeek.highgeeksync.sync.chat;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.objects.Message;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
 import eu.highgeek.highgeeksync.utils.VersionHandler;
@@ -40,13 +41,28 @@ public class MessageSender {
         return container;
     }
 
+    public static final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+
+    public  static String format(String msg){
+        Main.logger.warning("Before format: \n" + msg);
+        Matcher match = pattern.matcher(msg);
+        while (match.find()){
+            String color = msg.substring(match.start(), match.end());
+            msg = msg.replaceAll(HEX_COLOR_CODE_PREFIX, BUKKIT_COLOR_CODE_PREFIX_CHAR + BUKKIT_HEX_COLOR_CODE_PREFIX);
+            //msg = msg.replace(color, net.md_5.bungee.api.ChatColor.of(color) + "");
+        }
+        Main.logger.warning("After format: \n" + msg);
+        return msg;
+    }
+
     public static String convertToJson(Message message) {
         message.setMessage(escapeJsonChars(message.getMessage()));
         String json = "[\"\",{\"text\":\"\",\"extra\":[";
-        json += convertLinks(channelMessageBuilder(message));
+        json += convertLinks(format(channelMessageBuilder(message)));
         json += "]}";
-        json += "," + convertLinks(message.getMessage().replaceAll("&", "§"));
+        json += "," + convertLinks(format(message.getMessage().replaceAll("&", "§")));
         json += "]";
+        Main.logger.warning("Json msg: \n" + json);
         return json;
     }
 
@@ -326,7 +342,7 @@ public class MessageSender {
     }
 
     public static final int LEGACY_COLOR_CODE_LENGTH = 2;
-    public static final int HEX_COLOR_CODE_LENGTH = 14;
+    public static final int HEX_COLOR_CODE_LENGTH = 8;
     public static final String HEX_COLOR_CODE_PREFIX = "#";
     public static final char BUKKIT_COLOR_CODE_PREFIX_CHAR = '\u00A7';
     public static final String BUKKIT_COLOR_CODE_PREFIX = String.valueOf(BUKKIT_COLOR_CODE_PREFIX_CHAR);
