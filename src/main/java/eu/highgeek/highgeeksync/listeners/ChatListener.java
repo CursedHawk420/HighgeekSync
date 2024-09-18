@@ -34,6 +34,7 @@ public class ChatListener implements Listener {
     public void onGameChatMessage(AsyncPlayerChatEvent event){
         //sendAsyncChatMessageToPlayers(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
         setRedisMessageAsync(event);
+        event.setCancelled(true);
     }
     public void setRedisMessageAsync(AsyncPlayerChatEvent event){
         Bukkit.getScheduler().runTaskAsynchronously(Main.main, new Runnable() {
@@ -54,7 +55,6 @@ public class ChatListener implements Listener {
                 String suffix = PlaceholderParser.parsePlaceholders("%vault_suffix%", event.getPlayer());;
                 String primaryGroup = PlaceholderParser.parsePlaceholders("%luckperms_primary_group_name%", event.getPlayer());
                 RedisManager.addChatEntry(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
-                event.setCancelled(true);
             }
         });
     }
