@@ -3,6 +3,7 @@ package eu.highgeek.highgeeksync;
 import java.util.logging.Logger;
 
 import eu.highgeek.highgeeksync.commands.ChannelCommand;
+import eu.highgeek.highgeeksync.listeners.*;
 import eu.highgeek.highgeeksync.objects.PlayerList;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -23,20 +24,17 @@ import eu.highgeek.highgeeksync.data.redis.RedisEventListener;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.data.sql.MySql;
 import eu.highgeek.highgeeksync.data.sql.MysqlVirtualInventoryManager;
-import eu.highgeek.highgeeksync.listeners.ChatListener;
-import eu.highgeek.highgeeksync.listeners.DeathListener;
-import eu.highgeek.highgeeksync.listeners.JoinListener;
-import eu.highgeek.highgeeksync.listeners.QuitListener;
-import eu.highgeek.highgeeksync.listeners.VirtualInventoryListener;
 import eu.highgeek.highgeeksync.sync.chat.ChatInitializer;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.UnifiedJedis;
 
 public final class Main extends JavaPlugin implements Listener {
 
     public static Main main;
     public static Logger logger;
     public static Jedis redisConnection;
+    public static UnifiedJedis unifiedJedis;
     public static BukkitTask redisListenerTask;
     public static ProtocolManager protocolManager;
     public static Economy econ = null;
@@ -46,6 +44,7 @@ public final class Main extends JavaPlugin implements Listener {
         pluginManager.registerEvents((Listener) new JoinListener(), (Plugin) this);
         pluginManager.registerEvents((Listener) new QuitListener(), (Plugin) this);
         pluginManager.registerEvents((Listener) new DeathListener(), (Plugin) this);
+        pluginManager.registerEvents((Listener) new StatsListener(), (Plugin) this);
 
         pluginManager.registerEvents((Listener) new ChatListener(), (Plugin) this);
         pluginManager.registerEvents((Listener) new VirtualInventoryListener(), (Plugin) this);
@@ -76,7 +75,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         MySql.initMysql();
         RedisManager.initRedis();
-
+        RedisManager.initUnifiedJedis();
 
         MysqlVirtualInventoryManager.loadAllVirtualInventoriesObjects();
 

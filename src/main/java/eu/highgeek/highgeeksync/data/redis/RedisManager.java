@@ -18,10 +18,9 @@ import eu.highgeek.highgeeksync.Main;
 import eu.highgeek.highgeeksync.sync.adapters.ItemStackAdapter;
 import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
 import eu.highgeek.highgeeksync.utils.ConfigManager;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.*;
 import redis.clients.jedis.exceptions.JedisException;
+import redis.clients.jedis.json.Path2;
 
 public class RedisManager {
 
@@ -30,6 +29,10 @@ public class RedisManager {
     public static String database = ConfigManager.getString("redis.database");
     public static String username = ConfigManager.getString("redis.username");
     public static String password = ConfigManager.getString("redis.password");
+    public static HostAndPort node = HostAndPort.from(host + ":" + port);
+    public static JedisClientConfig clientConfig = DefaultJedisClientConfig.builder()
+            .resp3() // RESP3 protocol
+            .build();
 
     public static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -49,6 +52,10 @@ public class RedisManager {
         }catch (JedisException e){
             Main.logger.warning("Redis connection failed! \n" + ExceptionUtils.getStackTrace(e));
         }
+    }
+
+    public static void initUnifiedJedis(){
+        Main.unifiedJedis = new UnifiedJedis(node, clientConfig);
     }
 
     public static Jedis setupRedis() {
@@ -129,5 +136,12 @@ public class RedisManager {
             list.add(string.substring(string.lastIndexOf(":") + 1));
         }
         return list;
+    }
+
+    public static void jsonSet(String uuid, String path, String toSet){
+        Main.unifiedJedis.jsonSet(uuid, new Path2(path), toSet);
+    }
+    public static void jsonSet(String uuid, String toSet){
+        Main.unifiedJedis.jsonSet(uuid, toSet);
     }
 }

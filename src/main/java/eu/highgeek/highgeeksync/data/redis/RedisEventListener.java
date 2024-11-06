@@ -45,26 +45,26 @@ public class RedisEventListener extends JedisPubSub {
 
             switch (key){
                 case "vinv":
-                    Main.logger.warning("Switch vinv hit: " + message);
                     fireVinvEvent(message);
+                    //Main.logger.warning("Switch vinv hit: " + message);
                     return;
                 case "chat":
                     fireChatMessage(message);
-                    Main.logger.warning("Switch chat hit: " + message);
+                    //Main.logger.warning("Switch chat hit: " + message);
                     return;
                 case "winv":
-                    Main.logger.warning("Switch winv hit: " + message);
+                    //Main.logger.warning("Switch winv hit: " + message);
                     return;
                 case "newinventory":
                     fireNewInventoryEvent(message);
-                    Main.logger.warning("Switch newinventory hit: " + message);
+                    //Main.logger.warning("Switch newinventory hit: " + message);
                     return;
                 case "players":
                     firePlayersEvent(message);
-                    Main.logger.warning("Switch players hit: " + message);
+                    //Main.logger.warning("Switch players hit: " + message);
                 case "economy":
                     fireEconomyEvent(message);
-                    Main.logger.warning("Switch economy hit: " + message);
+                    //Main.logger.warning("Switch economy hit: " + message);
                 return;
                 default:
                     return;
@@ -74,7 +74,7 @@ public class RedisEventListener extends JedisPubSub {
 
     public static void fireEconomyEvent(String message){
         if (message.contains("pay")){
-            Main.logger.warning("fireEconomyPayEvent " + message);
+            //Main.logger.warning("fireEconomyPayEvent " + message);
             RedisEconomyPayEvent event = new RedisEconomyPayEvent(RedisManager.getStringRedis(message), message, true);
             Bukkit.getPluginManager().callEvent(event);
         }
@@ -107,7 +107,7 @@ public class RedisEventListener extends JedisPubSub {
                 @Override
                 public void run() {
                     RedisNewInventoryEvent redisNewInventoryEvent = new RedisNewInventoryEvent(uuid, message);
-                    Main.logger.warning("fireNewInventoryEvent uuid: " + uuid + " rawUuid: " + message);
+                    //Main.logger.warning("fireNewInventoryEvent uuid: " + uuid + " rawUuid: " + message);
                     Bukkit.getPluginManager().callEvent(redisNewInventoryEvent);
                 }
             },0);
