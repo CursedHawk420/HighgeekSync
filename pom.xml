@@ -6,7 +6,7 @@
 
   <groupId>eu.highgeek.highgeeksync</groupId>
   <artifactId>HighgeekSync</artifactId>
-  <version>0.0.4-SNAPSHOT</version>
+  <version>0.0.5-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>HighgeekSync</name>
@@ -152,12 +152,12 @@
       <dependency>
           <groupId>dev.jorel</groupId>
           <artifactId>commandapi-bukkit-shade</artifactId>
-          <version>9.5.3</version>
+          <version>9.6.0</version>
       </dependency>
       <dependency>
           <groupId>dev.jorel</groupId>
           <artifactId>commandapi-annotations</artifactId>
-          <version>9.5.3</version>
+          <version>9.6.0</version>
       </dependency>
       <dependency>
           <groupId>me.clip</groupId>
