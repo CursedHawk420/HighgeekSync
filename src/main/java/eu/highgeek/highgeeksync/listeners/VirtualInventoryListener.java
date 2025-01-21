@@ -47,25 +47,27 @@ public class VirtualInventoryListener implements Listener {
                     ItemStack itemStack = event.getCurrentItem();
 
                     if(event.getClick() == ClickType.RIGHT){
-                        ItemStack item = event.getClickedInventory().getItem(event.getClickedInventory().first(Material.BLUE_WOOL));
-                        item = channelSelector.leaveChannelItem(ChannelManager.getChatChannelFromName(item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING)));
-                        event.getClickedInventory().setItem(event.getClickedInventory().first(Material.BLUE_WOOL), item);
-
                         ChatChannel channel = ChannelManager.getChatChannelFromName(itemStack.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING));
+                        if(channel.isCanSpeak()){
+                            ItemStack item = event.getClickedInventory().getItem(event.getClickedInventory().first(Material.BLUE_WOOL));
+                            item = channelSelector.leaveChannelItem(ChannelManager.getChatChannelFromName(item.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING)));
+                            event.getClickedInventory().setItem(event.getClickedInventory().first(Material.BLUE_WOOL), item);
 
-                        channelSelector.getInventory().setItem(event.getSlot(), channelSelector.blueChannelItem(channel));
-                        channelSelector.initializeItems();
 
-                        //ChannelManager.setChannelOut(ChannelManager.getChatPlayer(player.getName()), channel);
+                            channelSelector.getInventory().setItem(event.getSlot(), channelSelector.blueChannelItem(channel));
+                            channelSelector.initializeItems();
 
-                        channelSelector.playerSettings.channelOut = channel.name;
+                            //ChannelManager.setChannelOut(ChannelManager.getChatPlayer(player.getName()), channel);
 
-                        if(!channelSelector.playerSettings.joinedChannels.contains(channel.name)){
-                            channelSelector.playerSettings.joinedChannels.add(channel.name);
+                            channelSelector.playerSettings.channelOut = channel.name;
+
+                            if(!channelSelector.playerSettings.joinedChannels.contains(channel.name)){
+                                channelSelector.playerSettings.joinedChannels.add(channel.name);
+                            }
+                            RedisManager.setPlayerSettings(channelSelector.playerSettings);
+
+                            channelSelector.updateInv();
                         }
-                        RedisManager.setPlayerSettings(channelSelector.playerSettings);
-
-                        channelSelector.updateInv();
 
                     }
                     else if (event.getClick() == ClickType.LEFT){

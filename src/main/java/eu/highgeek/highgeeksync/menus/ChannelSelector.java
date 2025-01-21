@@ -42,9 +42,28 @@ public final class ChannelSelector implements InventoryHolder
         inventory.clear();
         inventory.addItem(infoItem());
         for (ChatChannel chatChannel : ChannelManager.chatChannels){
-            inventory.addItem(generateItemStack(chatChannel));
+            if(chatChannel.permission == null){
+                inventory.addItem(generateItemStack(getSpeakPerm(chatChannel)));
+            }else {
+                if(player.hasPermission(chatChannel.permission)){
+                    inventory.addItem(generateItemStack(getSpeakPerm(chatChannel)));
+                }
+            }
         }
         inventory.setItem(inventory.getSize() - 1, discordChannelItem());
+    }
+
+    public ChatChannel getSpeakPerm(ChatChannel channel){
+        if(channel.speakPermission != null){
+            if(player.hasPermission(channel.speakPermission)){
+                channel.setCanSpeak(true);
+            }else {
+                channel.setCanSpeak(false);
+            }
+        }else {
+            channel.setCanSpeak(true);
+        }
+        return channel;
     }
 
     public ItemStack infoItem(){
@@ -80,8 +99,11 @@ public final class ChannelSelector implements InventoryHolder
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(channel.getFancyName());
         meta.getPersistentDataContainer().set(NamespacedKey.fromString("channel"), PersistentDataType.STRING, channel.getName());
-
-        meta.setLore(Arrays.asList("Currently listening in", channel.getFancyName()));
+        if(channel.isCanSpeak()){
+            meta.setLore(Arrays.asList("Currently listening in", channel.getFancyName()));
+        }else {
+            meta.setLore(Arrays.asList("Currently listening in", channel.getFancyName(), "You can't speak in this channel."));
+        }
         itemStack.setItemMeta(meta);
 
         return itemStack;
@@ -93,8 +115,11 @@ public final class ChannelSelector implements InventoryHolder
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(channel.getFancyName());
         meta.getPersistentDataContainer().set(NamespacedKey.fromString("channel"), PersistentDataType.STRING, channel.getName());
-
-        meta.setLore(Arrays.asList("Click to join channel", channel.getFancyName()));
+        if(channel.isCanSpeak()){
+            meta.setLore(Arrays.asList("Click to join channel", channel.getFancyName()));
+        }else {
+            meta.setLore(Arrays.asList("Click to join channel", channel.getFancyName(), "You can't speak in this channel."));
+        }
         itemStack.setItemMeta(meta);
 
         return itemStack;

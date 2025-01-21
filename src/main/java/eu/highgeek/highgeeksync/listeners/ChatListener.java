@@ -62,7 +62,7 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onRedisChatMessage(AsyncRedisChatSetEvent event){
-        Main.logger.warning("Async onRedisChatMessage eventHandler hit");
+        //Main.logger.warning("Async onRedisChatMessage eventHandler hit");
         sendAsyncChatMessageToPlayers(event.getMessage());
     }
 

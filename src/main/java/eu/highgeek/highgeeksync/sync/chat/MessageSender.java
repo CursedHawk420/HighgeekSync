@@ -44,14 +44,14 @@ public class MessageSender {
     public static final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
 
     public  static String format(String msg){
-        Main.logger.warning("Before format: \n" + msg);
+        //Main.logger.warning("Before format: \n" + msg);
         Matcher match = pattern.matcher(msg);
         while (match.find()){
             String color = msg.substring(match.start(), match.end());
             msg = msg.replaceAll(HEX_COLOR_CODE_PREFIX, BUKKIT_COLOR_CODE_PREFIX_CHAR + BUKKIT_HEX_COLOR_CODE_PREFIX);
             //msg = msg.replace(color, net.md_5.bungee.api.ChatColor.of(color) + "");
         }
-        Main.logger.warning("After format: \n" + msg);
+        //Main.logger.warning("After format: \n" + msg);
         return msg;
     }
 
@@ -62,7 +62,7 @@ public class MessageSender {
         json += "]}";
         json += "," + convertLinks(format(message.getMessage().replaceAll("&", "§")));
         json += "]";
-        Main.logger.warning("Json msg: \n" + json);
+        //Main.logger.warning("Json msg: \n" + json);
         return json;
     }
 
