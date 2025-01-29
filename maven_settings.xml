@@ -15,6 +15,12 @@
       <id>highgeek-maven</id>
       <username>${highgeekmaven.username}</username>
       <password>${highgeekmaven.password}</password>
+      <configuration>
+        <authenticationInfo>
+          <userName>${highgeekmaven.username}</userName>
+          <password>${highgeekmaven.password}</password>
+        </authenticationInfo>
+      </configuration>
     </server>
   </servers>
 </settings>

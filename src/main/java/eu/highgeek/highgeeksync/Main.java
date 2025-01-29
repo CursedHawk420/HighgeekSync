@@ -95,7 +95,7 @@ public final class Main extends JavaPlugin implements Listener {
 
         PlayerList.onShutDown();
 
-        RedisEventListener.listenerStopper();
+        RedisManager.stopSubscriber();
         Main.redisConnection.disconnect();
         Main.redisConnection.close();
         MySql.disconnectMySQL();

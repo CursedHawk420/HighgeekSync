@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import eu.highgeek.highgeeksync.objects.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,6 +25,8 @@ import redis.clients.jedis.json.Path2;
 
 public class RedisManager {
 
+    private static boolean running = true;
+    private static RedisEventListener subscriber = new RedisEventListener();
     public static String host = ConfigManager.getString("redis.host");
     public static String port = ConfigManager.config.getString("redis.port");
     public static String database = ConfigManager.getString("redis.database");
@@ -41,17 +44,37 @@ public class RedisManager {
     public static void initRedis(){
         try {
             Main.redisConnection = RedisManager.setupRedis();
-            if (Main.redisConnection != null){
-                if (Main.redisConnection.getConnection() != null){
-                    RedisEventListener.listenerStarter(Main.main, RedisManager.setupRedis());
-                    Main.logger.warning("Redis connected successfully! \n");
-                }else {
-                    Main.logger.warning("Redis connection failed! \n");
+            Main.redisListenerTask = Bukkit.getServer().getScheduler().runTaskAsynchronously(Main.main, new Runnable() {
+                public void run() {
+                    startSubscriber();
                 }
-            }
+            });
         }catch (JedisException e){
             Main.logger.warning("Redis connection failed! \n" + ExceptionUtils.getStackTrace(e));
+            Main.main.getServer().shutdown();
         }
+    }
+
+    private static void startSubscriber(){
+        while (running) {  // Infinite loop for reconnection handling
+            try (Jedis jedis = new Jedis(host, Integer.parseInt(port))) {
+                jedis.psubscribe(subscriber, "*");
+            } catch (Exception e) {
+                if (!running) break; // Exit loop if shutting down
+                try {
+                    Thread.sleep(100); // Wait before reconnecting
+                } catch (InterruptedException ignored) {
+                }
+            }
+        }
+    }
+
+    public static void stopSubscriber() {
+        running = false; // Set flag to stop reconnection attempts
+        if (subscriber != null) {
+            subscriber.punsubscribe(); // Stop Jedis subscription
+        }
+        Main.redisListenerTask.cancel();
     }
 
     public static void initUnifiedJedis(){

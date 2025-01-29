@@ -144,15 +144,6 @@ public class RedisEventListener extends JedisPubSub {
         return channel;
     }
 
-    public static void listenerStarter(Plugin plugin, Jedis jedis){
-        listener = jedis;
-
-        Main.redisListenerTask = Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            public void run() {
-                listener.psubscribe(new RedisEventListener(), "*");
-            }
-        });
-    }
 
     public static void listenerStopper(){
         listener.disconnect();

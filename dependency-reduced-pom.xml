@@ -125,8 +125,8 @@
   </dependencies>
   <distributionManagement>
     <repository>
-      <id>gitlab-maven</id>
-      <url>https://gitlab.highgeek.eu/api/v4/projects/2/packages/maven</url>
+      <id>highgeek-maven</id>
+      <url>https://maven.highgeek.eu/releases</url>
     </repository>
     <snapshotRepository>
       <id>gitlab-maven</id>
