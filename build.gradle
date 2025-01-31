@@ -1,0 +1,107 @@
+plugins {
+    id 'java'
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+group = 'eu.highgeek'
+version = '0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+}
+configurations {
+    reverseMap
+}
+dependencies {
+    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+    implementation("redis.clients:jedis:5.1.1")
+
+    compileOnly("org.projectlombok:lombok:1.18.30")
+
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    implementation("org.jetbrains:annotations:26.0.2")
+
+    compileOnly("com.mysql:mysql-connector-j:9.2.0")
+    compileOnly('org.hibernate.orm:hibernate-core:6.1.5.Final')
+    implementation("org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.1.Final")
+
+
+    //reverseMap 'com.mysql:mysql-connector-j:9.2.0'
+    //reverseMap 'org.hibernate:hibernate-core:5.6.15.Final'
+    //reverseMap 'org.hibernate:hibernate-tools:5.6.15.Final'
+
+
+    //reverseMap 'org.slf4j:slf4j-simple:1.7.5'
+    //reverseMap 'org.hibernate:hibernate-core:4.0.1.Final'
+    //reverseMap 'org.hibernate:hibernate-tools:4.0.1.Final'
+    //reverseMap 'mysql:mysql-connector-java:5.1.48'
+}
+
+shadowJar {
+    dependencies {
+        include dependency("redis.clients:jedis:5.1.1")
+    }
+    relocate("redis.clients", "shaded.redis.clients")
+}
+
+project.ext {
+    hibernateDestDir = file("$projectDir/hibernate")
+}
+task reverseMap {
+    outputs.dir hibernateDestDir
+    doLast {
+        hibernateDestDir.exists() || hibernateDestDir.mkdirs()
+        ant {
+            taskdef(
+                    name: 'hibernatetool',
+                    classname: 'org.hibernate.tool.ant.HibernateToolTask',
+                    classpath: configurations.reverseMap.asPath
+            )
+            hibernatetool(destdir: hibernateDestDir) {
+                jdbcconfiguration(
+                        configurationfile: "$projectDir/hibernate/hibernate.cfg.xml",
+                        packagename: "eu.highgeek.highgeeksync.objects"
+                )
+                hbm2java(
+                        jdk5: true,
+                        ejb3: true
+                )
+            }
+        }
+    }
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}

@@ -1,0 +1,4 @@
+#Default redis IP
+redis-ip = "0.0.0.0"
+#Default redis port
+redis-port = "6379"

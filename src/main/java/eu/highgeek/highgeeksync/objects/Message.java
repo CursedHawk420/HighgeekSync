@@ -1,7 +1,9 @@
 package eu.highgeek.highgeeksync.objects;
 
-import lombok.*;
-import jline.internal.Nullable;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -27,7 +29,7 @@ public class Message {
     private UUID playeruuid;
     private String prettyservername;
 
-    public Message(String uuid, String username, String nickname, String message, String primarygroup, String datetime, String channel, String channelprefix, String source, String servername, String prefix, String suffix, UUID playeruuid, String prettyservername){
+    public Message(String uuid, String username, String nickname, String message, String primarygroup, String datetime, String channel, String channelprefix, String source, String servername, @Nullable String prefix, @Nullable String suffix, @Nullable UUID playeruuid, String prettyservername){
         this.uuid = uuid;
         this.username = username;
         this.nickname = nickname;
@@ -43,6 +45,4 @@ public class Message {
         this.playeruuid = playeruuid;
         this.prettyservername = prettyservername;
     }
-
-
 }

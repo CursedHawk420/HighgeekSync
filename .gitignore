@@ -1,3 +1,5 @@
+hibernate/
+.gradle/
 target/
 .vscode/
 .idea/
