@@ -1,16 +1,6 @@
 package eu.highgeek.highgeeksync;
 
-import eu.highgeek.highgeeksync.config.FileConfig;
-import eu.highgeek.highgeeksync.data.redis.RedisManager;
-import eu.highgeek.highgeeksync.data.sql.DatabaseFactory;
-import eu.highgeek.highgeeksync.data.sql.daos.VirtualInventoryDao;
-import eu.highgeek.highgeeksync.data.sql.entities.VirtualInventories;
-import eu.highgeek.highgeeksync.listeners.PlayerJoinListener;
-import eu.highgeek.highgeeksync.listeners.PlayerLeaveListener;
-import lombok.Getter;
-import org.bukkit.Server;
-import org.bukkit.plugin.java.JavaPlugin;
-
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,8 +8,22 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.bukkit.Server;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+import eu.highgeek.highgeeksync.config.FileConfig;
+import eu.highgeek.highgeeksync.data.redis.RedisManager;
+import eu.highgeek.highgeeksync.data.sql.entities.InventoryController;
+import eu.highgeek.highgeeksync.data.sql.entities.VirtualInventories;
+import eu.highgeek.highgeeksync.listeners.PlayerJoinListener;
+import eu.highgeek.highgeeksync.listeners.PlayerLeaveListener;
+import lombok.Getter;
+
 public final class HighgeekSync extends JavaPlugin {
 
+	private static final String HIBERNATE_CONFIG_FILE_NAME = "hibernate.cfg.xml";
 
     public Server server = this.getServer();
     public FileConfig config;
@@ -30,9 +34,9 @@ public final class HighgeekSync extends JavaPlugin {
     private static HighgeekSync instance;
     @Getter
     private static RedisManager redisManager;
-
-    private DatabaseFactory databaseFactory;
-    private VirtualInventoryDao virtualInventoryDao;
+    
+	private SessionFactory sessionFactory;
+	private InventoryController inventoryController;
 
 
     private List<VirtualInventories> virtualInventories;
@@ -48,10 +52,6 @@ public final class HighgeekSync extends JavaPlugin {
         //Init services
         HighgeekSync.redisManager = new RedisManager();
 
-        this.databaseFactory = new DatabaseFactory(this);
-        this.virtualInventoryDao = new VirtualInventoryDao(this);
-
-        this.virtualInventories = this.virtualInventoryDao.findAll();
 
         //Register events
         server.getPluginManager().registerEvents(new PlayerJoinListener(),this);
@@ -61,6 +61,17 @@ public final class HighgeekSync extends JavaPlugin {
             logger.warning(i.getInventoryUuid());
         }
 
+    }
+
+    private void initHibernate(){
+        
+		this.saveResource(HIBERNATE_CONFIG_FILE_NAME, false);
+		this.sessionFactory = new Configuration()
+				.configure(new File(this.getDataFolder().getAbsolutePath() + "/" + HIBERNATE_CONFIG_FILE_NAME))
+				.addAnnotatedClass(VirtualInventories.class)
+				.buildSessionFactory();
+
+		this.inventoryController = new InventoryController(this.sessionFactory);
     }
 
 
