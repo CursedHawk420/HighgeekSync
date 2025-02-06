@@ -1,34 +1,32 @@
 package eu.highgeek.highgeeksync.listeners;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import eu.highgeek.highgeeksync.common.Common;
+import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
-import eu.highgeek.highgeeksync.utils.PlaceholderParser;
+import eu.highgeek.highgeeksync.features.chat.ChannelManager;
+import eu.highgeek.highgeeksync.models.ChatChannel;
+import eu.highgeek.highgeeksync.models.ChatMessage;
+import eu.highgeek.highgeeksync.models.HighgeekPlayer;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import com.comphenix.protocol.events.PacketContainer;
-
-import eu.highgeek.highgeeksync.Main;
-import eu.highgeek.highgeeksync.events.AsyncRedisChatSetEvent;
-import eu.highgeek.highgeeksync.objects.ChatChannel;
-import eu.highgeek.highgeeksync.objects.ChatPlayer;
-import eu.highgeek.highgeeksync.objects.Message;
-import eu.highgeek.highgeeksync.sync.chat.ChannelManager;
-import eu.highgeek.highgeeksync.sync.chat.MessageSender;
-import eu.highgeek.highgeeksync.utils.ConfigManager;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 
 public class ChatListener implements Listener {
+    public static final String servername =  HighgeekSync.getInstance().config.getServerName();
+    public static final String prettyServerName = HighgeekSync.getInstance().config.getPrettyServerName();
 
-    public static final String servername = ConfigManager.getString("chat.servername");
-    public static final String prettyServerName = ConfigManager.getString("chat.prettyservername");
+
+    private ChannelManager channelManager;
+    private RedisManager redisManager;
+    public ChatListener(RedisManager redisManager, ChannelManager channelManager){
+        this.channelManager = channelManager;
+        this.redisManager = redisManager;
+    }
 
     @EventHandler(ignoreCancelled = true)
     public void onGameChatMessage(AsyncPlayerChatEvent event){
@@ -37,54 +35,23 @@ public class ChatListener implements Listener {
         event.setCancelled(true);
     }
     public void setRedisMessageAsync(AsyncPlayerChatEvent event){
-        Bukkit.getScheduler().runTaskAsynchronously(Main.main, new Runnable() {
+        Bukkit.getScheduler().runTaskAsynchronously(HighgeekSync.getInstance(), new Runnable() {
             @Override
             public void run() {
-                Main.logger.warning("Async onGameChatMessage eventHandler hit");
-                String playerUuid = event.getPlayer().getUniqueId().toString();
                 String playerName = event.getPlayer().getName();
-
-
                 String time =  Instant.now().toString();
 
-                ChatChannel chatChannel = ChannelManager.getChatChannelFromName(Common.playerSettings.get(event.getPlayer().getName()).channelOut);
-                Main.logger.warning("Channel out used: " + chatChannel.getName());
+                ChatChannel chatChannel = HighgeekSync.getInstance().getHighgeekPlayers().get(event.getPlayer().getUniqueId()).getChannelOut();
+
                 String uuid = "chat:"+chatChannel.getName()+":"+time.replaceAll(":", "-")+":"+playerName;
                 String channelPrefix = chatChannel.getPrefix();
-                String prefix = PlaceholderParser.parsePlaceholders("%vault_prefix%", event.getPlayer());
-                String suffix = PlaceholderParser.parsePlaceholders("%vault_suffix%", event.getPlayer());;
-                String primaryGroup = PlaceholderParser.parsePlaceholders("%luckperms_primary_group_name%", event.getPlayer());
-                RedisManager.addChatEntry(new Message(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
+
+                String prefix = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%vault_prefix%");
+                String suffix = PlaceholderAPI.setPlaceholders(event.getPlayer(), "%vault_suffix%");;
+                String primaryGroup = PlaceholderAPI.setPlaceholders(event.getPlayer(),"%luckperms_primary_group_name%");
+
+                redisManager.addChatEntry(new ChatMessage(uuid, playerName, playerName, event.getMessage(), primaryGroup, time, chatChannel.getName(), channelPrefix, "game", servername, prefix, suffix, event.getPlayer().getUniqueId(), prettyServerName));
             }
         });
-    }
-
-
-    @EventHandler
-    public void onRedisChatMessage(AsyncRedisChatSetEvent event){
-        //Main.logger.warning("Async onRedisChatMessage eventHandler hit");
-        sendAsyncChatMessageToPlayers(event.getMessage());
-    }
-
-    public void sendAsyncChatMessageToPlayers(Message message){
-
-        PacketContainer packetToSend =  MessageSender.createChatPacket(message);
-
-        ChatChannel channel = ChannelManager.getChatChannelFromName(message.getChannel());
-        List<ChatPlayer> chatPlayers = ChannelManager.channelPlayers.get(channel);
-
-        for (ChatPlayer chatPlayer : chatPlayers) {
-            sendChatPacket(chatPlayer.getPlayer(), packetToSend);
-        }
-
-        //todo list players in channel
-    }
-
-    public static void sendChatPacket(Player player, PacketContainer packet) {
-        try {
-            Main.protocolManager.sendServerPacket(player, packet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

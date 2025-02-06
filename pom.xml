@@ -6,7 +6,7 @@
 
   <groupId>eu.highgeek.highgeeksync</groupId>
   <artifactId>HighgeekSync</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>HighgeekSync</name>
@@ -41,15 +41,18 @@
             </execution>
         </executions>
           <configuration>
-              <minimizeJar>true</minimizeJar>
               <relocations>
                   <relocation>
                       <pattern>dev.jorel.commandapi</pattern>
-                      <shadedPattern>eu.highgeek.highgeeksync.commandapi</shadedPattern>
+                      <shadedPattern>${project.groupId}.libs.commandapi</shadedPattern>
                   </relocation>
                   <relocation>
                       <pattern>com.saicone.rtag</pattern>
                       <shadedPattern>${project.groupId}.libs.rtag</shadedPattern>
+                  </relocation>
+                  <relocation>
+                      <pattern>org.hibernate</pattern>
+                      <shadedPattern>${project.groupId}.libs.hibernate</shadedPattern>
                   </relocation>
               </relocations>
           </configuration>
@@ -62,7 +65,6 @@
       </resource>
     </resources>
   </build>
-
   <repositories>
       <repository>
         <id>auxilor</id>
@@ -108,7 +110,7 @@
       <dependency>
           <groupId>org.spigotmc</groupId>
           <artifactId>spigot-api</artifactId>
-          <version>1.17.1-R0.1-SNAPSHOT</version>
+          <version>1.20.1-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
@@ -193,6 +195,16 @@
           <artifactId>EcoBits</artifactId>
           <version>1.8.4</version>
           <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-core</artifactId>
+          <version>6.6.6.Final</version>
+      </dependency>
+      <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>8.0.28</version>
       </dependency>
   </dependencies>
 </project>
