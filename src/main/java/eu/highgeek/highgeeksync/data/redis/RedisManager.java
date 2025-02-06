@@ -14,6 +14,7 @@ import eu.highgeek.highgeeksync.models.ChatChannel;
 import redis.clients.jedis.json.Path2;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -76,6 +77,14 @@ public class RedisManager {
             subscriber.punsubscribe(); // Stop Jedis subscription
         }
         HighgeekSync.getInstance().logger.info("Subscriber has been shut down.");
+    }
+
+    public List<String> getGeneratedPlayerList(){
+        ArrayList<String> list = new ArrayList<>();
+        for (String string : getKeysPrefix("players:settings:*")){
+            list.add(string.substring(string.lastIndexOf(":") + 1));
+        }
+        return list;
     }
 
     public String getStringRedis(String key){
