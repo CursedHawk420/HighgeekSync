@@ -41,7 +41,7 @@ public class ChatListener implements Listener {
                 String playerName = event.getPlayer().getName();
                 String time =  Instant.now().toString();
 
-                ChatChannel chatChannel = HighgeekSync.getInstance().getHighgeekPlayers().get(event.getPlayer().getUniqueId()).getChannelOut();
+                ChatChannel chatChannel = HighgeekSync.getInstance().getHighgeekPlayers().get(event.getPlayer().getName()).getChannelOut();
 
                 String uuid = "chat:"+chatChannel.getName()+":"+time.replaceAll(":", "-")+":"+playerName;
                 String channelPrefix = chatChannel.getPrefix();

@@ -23,7 +23,8 @@ public class HighgeekPlayer {
     private final RedisManager redisManager;
 
     private final PlayerSettings playerSettings;
-    private final List<ChatChannel> playerChannels = new ArrayList<>();
+    @Getter
+    private List<ChatChannel> playerChannels = new ArrayList<>();
     @Getter
     private ChatChannel channelOut;
 
@@ -35,49 +36,52 @@ public class HighgeekPlayer {
 
         this.virtualInventories = getPlayerInventories();
         this.playerSettings = getPlayerSettings();
+        this.playerSettings.player = this;
 
-        for (String stringChannel : playerSettings.joinedChannels) {
-            ChatChannel playChannel = channelManager.chatChannels.stream()
-                    .filter(s -> s.name.equals(stringChannel))
-                    .findAny()
-                    .orElse(null);
-            playerChannels.add(playChannel);
+        initChannels();
+        HighgeekSync.getInstance().getHighgeekPlayers().put(player.getName(), this);
+    }
 
-            channelManager.channelPlayers.get(playChannel).addLast(this);
-
-            HighgeekSync.getInstance().logger.warning("Channel in joined: " + playChannel.name);
-        }
-        channelOut = channelManager.chatChannels.stream()
-                .filter(s -> s.name.equals(playerSettings.channelOut))
-                .findAny()
-                .orElse(null);
-        HighgeekSync.getInstance().logger.warning("Channel out joined: " + channelOut.name);
-        HighgeekSync.getInstance().getHighgeekPlayers().put(player.getUniqueId(), this);
+    public void initChannels(){
+        this.playerChannels = playerSettings.getJoinedChannels();
+        this.channelOut = playerSettings.getChannelOut();
     }
 
     public void joinToChannel(ChatChannel channel){
         if(!this.playerChannels.contains(channel)){
-            //Add to this joined channels
-            this.playerChannels.add(channel);
-            //Add to global channel list
-            channelManager.channelPlayers.get(channel).add(this);
+            this.playerSettings.joinedChannels.add(channel.name);
+            redisManager.setPlayerSettings(this.playerSettings);
         }
     }
 
     public void leaveChannel(ChatChannel channel){
         if(this.playerChannels.contains(channel)){
-            //Remove from this channel list
-            this.playerChannels.remove(channel);
-            //Remove from global channel list
-            channelManager.channelPlayers.get(channel).remove(this);
+            this.playerSettings.joinedChannels.remove(channel.name);
+            redisManager.setPlayerSettings(this.playerSettings);
         }
     }
 
-    public void setChannelOut(ChatChannel channel){
-        if(this.channelOut != channel){
-            //Set this channel out
-            this.channelOut = channel;
-            joinToChannel(channel);
+    public boolean setChannelOut(ChatChannel channel){
+        if(channel.speakPermission == null){
+            if(this.channelOut != channel)
+            {
+                this.playerSettings.channelOut = channel.name;
+                redisManager.setPlayerSettings(this.playerSettings);
+                joinToChannel(channel);
+                return true;
+            }
+            return false;
+        }
+        else {
+            if(player.hasPermission(channel.speakPermission)){
+                //Set this channel out
+                this.playerSettings.channelOut = channel.name;
+                redisManager.setPlayerSettings(this.playerSettings);
+                joinToChannel(channel);
+                return true;
+            }else {
+                return false;
+            }
         }
     }
 

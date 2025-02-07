@@ -14,9 +14,9 @@ public class PlayerLeaveListener implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(HighgeekSync.getInstance(), new Runnable() {
             @Override
             public void run() {
-                HighgeekPlayer player = HighgeekSync.getInstance().getHighgeekPlayers().get(event.getPlayer().getUniqueId());
+                HighgeekPlayer player = HighgeekSync.getInstance().getHighgeekPlayers().get(event.getPlayer().getName());
                 player.onDisconnectAsync();
-                HighgeekSync.getInstance().getHighgeekPlayers().remove(event.getPlayer().getUniqueId());
+                HighgeekSync.getInstance().getHighgeekPlayers().remove(event.getPlayer().getName());
             }
         });
     }

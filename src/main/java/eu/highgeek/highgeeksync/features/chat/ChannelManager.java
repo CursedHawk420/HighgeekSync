@@ -5,6 +5,7 @@ import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.models.ChatChannel;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import eu.highgeek.highgeeksync.models.PlayerSettings;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class ChannelManager {
     public List<ChatChannel> chatChannels = new ArrayList<>();
 
     public HashMap<ChatChannel, List<HighgeekPlayer>> channelPlayers = new HashMap<>();
+    @Getter
+    private final HashMap<String, ChannelMenu> openedChannelMenus = new HashMap<>();
 
     public ChannelManager(RedisManager redisManager){
         this.redisManager = redisManager;

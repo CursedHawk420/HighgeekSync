@@ -12,6 +12,7 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import eu.highgeek.highgeeksync.commands.ChannelCommand;
 import eu.highgeek.highgeeksync.features.chat.ChannelManager;
+import eu.highgeek.highgeeksync.features.chat.ChannelMenuListener;
 import eu.highgeek.highgeeksync.listeners.*;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import org.bukkit.Bukkit;
@@ -37,7 +38,7 @@ public final class HighgeekSync extends JavaPlugin {
     @Getter
     private static VirtualInventoryController virtualInventoryController;
     @Getter
-    private final HashMap<UUID, HighgeekPlayer> highgeekPlayers = new HashMap<UUID, HighgeekPlayer>();
+    private final HashMap<String, HighgeekPlayer> highgeekPlayers = new HashMap<String, HighgeekPlayer>();
     @Getter
     private static ChannelManager channelManager;
     @Getter
@@ -64,6 +65,7 @@ public final class HighgeekSync extends JavaPlugin {
         server.getPluginManager().registerEvents(new PlayerJoinListener(redisManager, channelManager),this);
         server.getPluginManager().registerEvents(new ChatListener(redisManager, channelManager),this);
         server.getPluginManager().registerEvents(new RedisChatListener(channelManager),this);
+        server.getPluginManager().registerEvents(new ChannelMenuListener(channelManager),this);
         server.getPluginManager().registerEvents(new StatsListener(redisManager), this);
         server.getPluginManager().registerEvents(new PlayerLeaveListener(),this);
 

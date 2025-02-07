@@ -1,14 +1,17 @@
 package eu.highgeek.highgeeksync.features.chat;
 
+import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.listeners.ChatListener;
 import eu.highgeek.highgeeksync.models.ChatChannel;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -16,16 +19,55 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Arrays;
+import java.util.Objects;
 
-public class ChannelMenu implements InventoryHolder, Listener {
+public class ChannelMenu implements InventoryHolder {
 
     private final Inventory inventory;
 
+    @Getter
     private final HighgeekPlayer highgeekPlayer;
 
+    private final ChannelManager channelManager;
+
     public ChannelMenu(HighgeekPlayer player){
+        this.channelManager = HighgeekSync.getChannelManager();
         this.highgeekPlayer = player;
         this.inventory = Bukkit.createInventory(this, 9, "Channel Selector");
+
+        channelManager.getOpenedChannelMenus().put(player.getPlayer().getName(), this);
+        init();
+        player.getPlayer().openInventory(inventory);
+    }
+
+    public void init(){
+        inventory.clear();
+        inventory.addItem(infoItem());
+        inventory.setItem(inventory.getSize() - 1, discordChannelItem());
+        setItemChannels();
+    }
+
+    private void setItemChannels(){
+        for (ChatChannel chatChannel : channelManager.chatChannels){
+            if(chatChannel.permission == null){
+                inventory.addItem(generateItemStack(chatChannel));
+            }else {
+                if(highgeekPlayer.getPlayer().hasPermission(chatChannel.permission)){
+                    inventory.addItem(generateItemStack(chatChannel));
+                }
+            }
+        }
+    }
+
+    public ItemStack generateItemStack(ChatChannel chatChannel){
+        if(Objects.equals(highgeekPlayer.getChannelOut(), chatChannel)){
+            return blueChannelItem(chatChannel);
+        }else
+        if(highgeekPlayer.getPlayerChannels().contains(chatChannel)){
+            return greenChannelItem(chatChannel);
+        }else {
+            return redChannelItem(chatChannel);
+        }
     }
 
     public ItemStack redChannelItem(ChatChannel channel){
@@ -102,13 +144,6 @@ public class ChannelMenu implements InventoryHolder, Listener {
         itemStack.setItemMeta(meta);
 
         return itemStack;
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
-        if(event.getInventory().getHolder() instanceof ChannelMenu){
-
-        }
     }
 
     @Override

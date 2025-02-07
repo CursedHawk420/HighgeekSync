@@ -5,6 +5,8 @@ import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisChatEvent;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisEconomyPayEvent;
 import eu.highgeek.highgeeksync.models.ChatMessage;
+import eu.highgeek.highgeeksync.models.HighgeekPlayer;
+import eu.highgeek.highgeeksync.models.PlayerSettings;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.*;
 
@@ -32,6 +34,9 @@ public class RedisSubscriber extends JedisPubSub{
                     fireEconomyEvent(message);
                     //Main.logger.warning("Switch economy hit: " + message);
                     return;
+                case "players":
+                    firePlayersEvent(message);
+                    return;
                     /*
                 case "vinv":
                     fireVinvEvent(message);
@@ -40,8 +45,6 @@ public class RedisSubscriber extends JedisPubSub{
                 case "winv":
                     //Main.logger.warning("Switch winv hit: " + message);
                     return;
-                case "players":
-                    firePlayersEvent(message);
                     //Main.logger.warning("Switch players hit: " + message);
                     */
                 default:
@@ -61,10 +64,9 @@ public class RedisSubscriber extends JedisPubSub{
     }
 
 
-    public void fireEconomyEvent(String message){
-        if (message.contains("pay")){
-            //Main.logger.warning("fireEconomyPayEvent " + message);
-            AsyncRedisEconomyPayEvent event = new AsyncRedisEconomyPayEvent(redisManager.getStringRedis(message), message, true);
+    public void fireEconomyEvent(String uuid){
+        if (uuid.contains("pay")){
+            AsyncRedisEconomyPayEvent event = new AsyncRedisEconomyPayEvent(redisManager.getStringRedis(uuid), uuid, true);
             Bukkit.getPluginManager().callEvent(event);
         }
     }
@@ -72,7 +74,19 @@ public class RedisSubscriber extends JedisPubSub{
     public void fireChatMessage(String uuid){
         AsyncRedisChatEvent asyncRedisChatEvent = new AsyncRedisChatEvent(redisManager.gson.fromJson(redisManager.getStringRedis(uuid), ChatMessage.class), true);
         Bukkit.getPluginManager().callEvent(asyncRedisChatEvent);
-        HighgeekSync.getInstance().logger.warning("RedisChat event fired'");
+    }
+
+    public void firePlayersEvent(String uuid){
+        if(uuid.contains("settings")){
+            String playerName = uuid.substring(uuid.lastIndexOf(':') + 1, uuid.length());
+            HighgeekSync.getInstance().logger.warning("Current playername: "+playerName);
+            HighgeekPlayer player = HighgeekSync.getInstance().getHighgeekPlayers().get(playerName);
+            if(player != null){
+                player.setPlayerSettings(redisManager.gson.fromJson(redisManager.getStringRedis(uuid), PlayerSettings.class));
+                player.initChannels();
+                HighgeekSync.getChannelManager().getOpenedChannelMenus().get(player.getPlayer().getName()).init();
+            }
+        }
     }
 
     public static String getKey(String channel) {

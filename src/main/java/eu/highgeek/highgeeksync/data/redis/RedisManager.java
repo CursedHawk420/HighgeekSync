@@ -56,6 +56,10 @@ public class RedisManager {
     }
 
 
+    public void setPlayerSettings(PlayerSettings playerSettings){
+        setStringRedis("players:settings:"+playerSettings.playerName, gson.toJson(playerSettings));
+    }
+
     private void startSubscriber(){
         while (running) {  // Infinite loop for reconnection handling
             try (Jedis jedis = new Jedis(host, port)) {
