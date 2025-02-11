@@ -34,7 +34,10 @@ public class PlayerSettings {
                     .findAny()
                     .orElse(null);
             channels.add(playChannel);
-            HighgeekSync.getChannelManager().channelPlayers.get(playChannel).addLast(player);
+            HighgeekSync.getChannelManager().channelPlayers.get(playChannel);
+            if(!HighgeekSync.getChannelManager().channelPlayers.get(playChannel).contains(player)){
+                HighgeekSync.getChannelManager().channelPlayers.get(playChannel).addLast(player);
+            }
         }
         return channels;
     }

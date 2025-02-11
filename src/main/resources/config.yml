@@ -8,3 +8,6 @@ db-password: ""
 #Chat
 servername: ""
 prettyservername: ""
+#ServerList
+serverlistpos: 10
+serverlistvisible: true

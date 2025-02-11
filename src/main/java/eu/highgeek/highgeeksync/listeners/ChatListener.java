@@ -22,7 +22,7 @@ public class ChatListener implements Listener {
 
 
     private ChannelManager channelManager;
-    private RedisManager redisManager;
+    private final RedisManager redisManager;
     public ChatListener(RedisManager redisManager, ChannelManager channelManager){
         this.channelManager = channelManager;
         this.redisManager = redisManager;

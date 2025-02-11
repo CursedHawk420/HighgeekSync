@@ -1,17 +1,12 @@
 package eu.highgeek.highgeeksync.features.chat;
 
 import eu.highgeek.highgeeksync.HighgeekSync;
-import eu.highgeek.highgeeksync.listeners.ChatListener;
 import eu.highgeek.highgeeksync.models.ChatChannel;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -75,11 +70,15 @@ public class ChannelMenu implements InventoryHolder {
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(channel.getFancyName());
         meta.getPersistentDataContainer().set(NamespacedKey.fromString("channel"), PersistentDataType.STRING, channel.getName());
+
+        meta.setLore(Arrays.asList("Click to join channel", channel.getFancyName()));
+        /*
         if(channel.isCanSpeak()){
             meta.setLore(Arrays.asList("Click to join channel", channel.getFancyName()));
         }else {
             meta.setLore(Arrays.asList("Click to join channel", channel.getFancyName(), "You can't speak in this channel."));
         }
+        */
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -89,11 +88,15 @@ public class ChannelMenu implements InventoryHolder {
         ItemMeta meta = itemStack.getItemMeta();
         meta.setDisplayName(channel.getFancyName());
         meta.getPersistentDataContainer().set(NamespacedKey.fromString("channel"), PersistentDataType.STRING, channel.getName());
+
+        meta.setLore(Arrays.asList("Currently listening in", channel.getFancyName()));
+        /*
         if(channel.isCanSpeak()){
             meta.setLore(Arrays.asList("Currently listening in", channel.getFancyName()));
         }else {
             meta.setLore(Arrays.asList("Currently listening in", channel.getFancyName(), "You can't speak in this channel."));
         }
+        */
         itemStack.setItemMeta(meta);
         return itemStack;
     }
@@ -113,7 +116,7 @@ public class ChannelMenu implements InventoryHolder {
 
     public ItemStack discordChannelItem(){
 
-        if(highgeekPlayer.getPlayerSettings().hasConnectedDiscord){
+        if(highgeekPlayer.getPlayerSettingsFromRedis().hasConnectedDiscord){
             ItemStack itemStack = new ItemStack(Material.BLUE_WOOL);
             ItemMeta meta = itemStack.getItemMeta();
             meta.setDisplayName("Discord");
@@ -124,7 +127,7 @@ public class ChannelMenu implements InventoryHolder {
             ItemStack itemStack = new ItemStack(Material.RED_WOOL);
             ItemMeta meta = itemStack.getItemMeta();
             meta.setDisplayName("Discord");
-            //meta.setLore(Arrays.asList("Integration is disconnected.", "To link your game account with Discord", "send Direct Message to our Discord bot ", "with code: "+ DiscordUtil.codeMap.get(player)));
+            meta.setLore(Arrays.asList("Integration is disconnected.", "To link your game account with Discord", "send Direct Message to our Discord bot ", "with code: "+ this.highgeekPlayer.getDiscordLinkingCode().getCode()));
             itemStack.setItemMeta(meta);
             return itemStack;
         }

@@ -1,6 +1,7 @@
 package eu.highgeek.highgeeksync.data.redis;
 
 
+import com.comphenix.protocol.PacketType;
 import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisChatEvent;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisEconomyPayEvent;
@@ -79,10 +80,11 @@ public class RedisSubscriber extends JedisPubSub{
     public void firePlayersEvent(String uuid){
         if(uuid.contains("settings")){
             String playerName = uuid.substring(uuid.lastIndexOf(':') + 1, uuid.length());
-            HighgeekSync.getInstance().logger.warning("Current playername: "+playerName);
             HighgeekPlayer player = HighgeekSync.getInstance().getHighgeekPlayers().get(playerName);
             if(player != null){
-                player.setPlayerSettings(redisManager.gson.fromJson(redisManager.getStringRedis(uuid), PlayerSettings.class));
+                PlayerSettings newPlayerSettings = redisManager.gson.fromJson(redisManager.getStringRedis(uuid), PlayerSettings.class);
+                newPlayerSettings.player = player;
+                player.setPlayerSettings(newPlayerSettings);
                 player.initChannels();
                 HighgeekSync.getChannelManager().getOpenedChannelMenus().get(player.getPlayer().getName()).init();
             }

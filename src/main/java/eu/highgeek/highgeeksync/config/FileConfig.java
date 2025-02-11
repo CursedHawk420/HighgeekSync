@@ -1,6 +1,7 @@
 package eu.highgeek.highgeeksync.config;
 
 import eu.highgeek.highgeeksync.HighgeekSync;
+import eu.highgeek.highgeeksync.data.sql.entities.DiscordLinkingCode;
 import eu.highgeek.highgeeksync.data.sql.entities.VirtualInventories;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.hibernate.SessionFactory;
@@ -21,6 +22,10 @@ public class FileConfig {
     private String redisIp;
 
     private int redisPort;
+
+    private int serverListPos;
+
+    private boolean serverListVisible;
 
     private String dbConnectionString;
 
@@ -49,78 +54,50 @@ public class FileConfig {
             );
         }
     }
-
-    /**
-     * Get the host value, or an empty string if it is null.
-     *
-     * @return the host value or an empty string
-     */
     public String getRedisIp() {
         this.redisIp = this.yamlConfiguration.getString("redis-ip", "");
         return this.redisIp;
     }
 
-    /**
-     * Retrieves the port number. If the port is not set, the default port 6379 is returned.
-     *
-     * @return  the port number
-     */
     public Integer getRedisPort() {
         this.redisPort = this.yamlConfiguration.getInt("redis-port", 6379);
         return this.redisPort;
     }
 
-    /**
-     * Retrieves the port number. If the port is not set, the default port 3306 is returned.
-     *
-     * @return  the port number
-     */
     public String getDbConnectionString() {
         this.dbConnectionString = this.yamlConfiguration.getString("db-connectionstring", "jdbc:mysql://localhost:3306/db");
         return this.dbConnectionString;
     }
 
-    /**
-     * Retrieves the port number. If the port is not set, the default port 3306 is returned.
-     *
-     * @return  the port number
-     */
     public String getDbUsername() {
         this.dbUsername = this.yamlConfiguration.getString("db-username", "root");
         return this.dbUsername;
     }
 
-    /**
-     * Retrieves the port number. If the port is not set, the default port 3306 is returned.
-     *
-     * @return  the port number
-     */
     public String getDbPassword() {
         this.dbPassword = this.yamlConfiguration.getString("db-password", "root");
         return this.dbPassword;
     }
 
-    /**
-     * Retrieves the port number. If the port is not set, the default port 3306 is returned.
-     *
-     * @return  the port number
-     */
     public String getPrettyServerName() {
         this.prettyServerName = this.yamlConfiguration.getString("prettyservername", "&2default");
         return this.prettyServerName;
     }
 
-    /**
-     * Retrieves the port number. If the port is not set, the default port 3306 is returned.
-     *
-     * @return  the port number
-     */
     public String getServerName() {
         this.serverName = this.yamlConfiguration.getString("servername", "default");
         return this.serverName;
     }
 
+    public Integer getServerListPos() {
+        this.serverListPos = this.yamlConfiguration.getInt("serverlistpos", 10);
+        return this.serverListPos;
+    }
 
+    public boolean getServerListVisible() {
+        this.serverListVisible = this.yamlConfiguration.getBoolean("serverlistvisible", true);
+        return this.serverListVisible;
+    }
 
     public Configuration getHibernateConfiguration() {
         Configuration configuration = new Configuration();
@@ -142,9 +119,7 @@ public class FileConfig {
         return configuration;
     }
 
-
     private static SessionFactory sessionFactory;
-
 
     public SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
@@ -152,6 +127,7 @@ public class FileConfig {
                 Configuration configuration = getHibernateConfiguration();
 
                 configuration.addAnnotatedClass(VirtualInventories.class);
+                configuration.addAnnotatedClass(DiscordLinkingCode.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();

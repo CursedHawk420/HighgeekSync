@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ChannelMenuListener implements Listener {
 
-    private ChannelManager channelManager;
+    private final ChannelManager channelManager;
     public ChannelMenuListener(ChannelManager channelManager){
         this.channelManager = channelManager;
     }
@@ -29,7 +29,9 @@ public class ChannelMenuListener implements Listener {
             if(clickedChannel != null){
                 ChatChannel channel = channelManager.getChatChannelFromName(clickedChannel.getItemMeta().getPersistentDataContainer().get(NamespacedKey.fromString("channel"), PersistentDataType.STRING));
                 if(event.isRightClick()){
-                    highgeekPlayer.setChannelOut(channel);
+                    if(!highgeekPlayer.setChannelOut(channel)){
+                        highgeekPlayer.getPlayer().sendMessage("&4You can't speak in this channel.");
+                    }
                     return;
                 }
                 if(event.isLeftClick()){

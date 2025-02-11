@@ -11,8 +11,10 @@ import com.comphenix.protocol.ProtocolManager;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import eu.highgeek.highgeeksync.commands.ChannelCommand;
+import eu.highgeek.highgeeksync.data.sql.controllers.DiscordLinkingCodeController;
 import eu.highgeek.highgeeksync.features.chat.ChannelManager;
 import eu.highgeek.highgeeksync.features.chat.ChannelMenuListener;
+import eu.highgeek.highgeeksync.features.serverstatus.ServerStatus;
 import eu.highgeek.highgeeksync.listeners.*;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import org.bukkit.Bukkit;
@@ -38,12 +40,16 @@ public final class HighgeekSync extends JavaPlugin {
     @Getter
     private static VirtualInventoryController virtualInventoryController;
     @Getter
+    private static DiscordLinkingCodeController discordLinkingCodeController;
+    @Getter
     private final HashMap<String, HighgeekPlayer> highgeekPlayers = new HashMap<String, HighgeekPlayer>();
     @Getter
     private static ChannelManager channelManager;
     @Getter
     private static ProtocolManager protocolManager;
-    
+    @Getter
+    private ServerStatus serverStatus;
+
 	private SessionFactory sessionFactory;
 
     public void init(){
@@ -60,6 +66,7 @@ public final class HighgeekSync extends JavaPlugin {
 
         //Init services
         HighgeekSync.channelManager = new ChannelManager(redisManager);
+        this.serverStatus = new ServerStatus(redisManager);
 
         //Register events
         server.getPluginManager().registerEvents(new PlayerJoinListener(redisManager, channelManager),this);
@@ -68,6 +75,8 @@ public final class HighgeekSync extends JavaPlugin {
         server.getPluginManager().registerEvents(new ChannelMenuListener(channelManager),this);
         server.getPluginManager().registerEvents(new StatsListener(redisManager), this);
         server.getPluginManager().registerEvents(new PlayerLeaveListener(),this);
+
+        server.getPluginManager().registerEvents(serverStatus,this);
 
 
         CommandAPI.registerCommand(ChannelCommand.class);
@@ -78,6 +87,8 @@ public final class HighgeekSync extends JavaPlugin {
         this.sessionFactory = config.getSessionFactory();
         //Hibernate controllers
         virtualInventoryController = new VirtualInventoryController(this.sessionFactory);
+        discordLinkingCodeController = new DiscordLinkingCodeController(this.sessionFactory);
+
     }
 
     private void checkDependencies(){
@@ -102,6 +113,7 @@ public final class HighgeekSync extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        serverStatus.onShutDown();
         redisManager.stopSubscriber();
     }
 
