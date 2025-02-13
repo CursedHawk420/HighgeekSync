@@ -110,7 +110,7 @@
     <dependency>
       <groupId>com.willfp</groupId>
       <artifactId>eco</artifactId>
-      <version>6.73.4</version>
+      <version>6.75.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

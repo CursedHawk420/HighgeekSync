@@ -4,15 +4,20 @@ import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
 import eu.highgeek.highgeeksync.data.sql.entities.DiscordLinkingCode;
 import eu.highgeek.highgeeksync.data.sql.entities.VirtualInventories;
+import eu.highgeek.highgeeksync.features.adapters.ItemStackAdapter;
 import eu.highgeek.highgeeksync.features.chat.ChannelManager;
+import eu.highgeek.highgeeksync.features.virtualinventories.VirtualInventoryHolder;
 import eu.highgeek.highgeeksync.utils.DiscordLinkingUtils;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class HighgeekPlayer {
@@ -111,6 +116,32 @@ public class HighgeekPlayer {
         return inventories;
     }
 
+    public void openDefaultInventory(){
+        for (VirtualInventories vinv : virtualInventories){
+            if(Objects.equals(vinv.getInventoryName(), "default") && !vinv.getWeb()){
+                openSpecificVirtualInventory(vinv);
+            }
+        }
+    }
+
+    public void openSpecificVirtualInventory(VirtualInventories vinv){
+        Inventory inv = Bukkit.createInventory(new VirtualInventoryHolder(vinv.getInventoryUuid(), vinv, this), vinv.getSize(), "§3Virtual Chest " + vinv.getInventoryName());
+        HighgeekSync.getInstance().logger.warning("Opening inventory for player: " + player.getName());
+
+        String invPrefix = "vinv:"+vinv.getPlayerName()+":"+vinv.getInventoryUuid();
+
+        for (int i = 0; i < vinv.getSize() ; i++) {
+            inv.setItem(i, ItemStackAdapter.fromString(HighgeekSync.getRedisManager().getStringRedis(invPrefix + ":" + i)));
+        }
+        List<HighgeekPlayer> players = HighgeekSync.getInventoriesManager().getOpenedInventories().get(vinv.getInventoryUuid());
+        if(players == null){
+            players = new ArrayList<>();
+        }
+        players.add(this);
+        HighgeekSync.getInventoriesManager().getOpenedInventories().put(vinv.getInventoryUuid(), players);
+        player.openInventory(inv);
+    }
+
     private void fistTimeLogin(){
         HighgeekSync.getDiscordLinkingCodeController().createNewDiscordLinkingCode(this.player, DiscordLinkingUtils.generateLinkingCode());
     }
@@ -130,7 +161,9 @@ public class HighgeekPlayer {
         }
     }
 
+
     public void onDisconnectAsync(){
+        HighgeekSync.getInstance().getHighgeekPlayers().remove(player.getName());
         for(ChatChannel channel : playerChannels){
             channelManager.channelPlayers.get(channel).remove(this);
         }

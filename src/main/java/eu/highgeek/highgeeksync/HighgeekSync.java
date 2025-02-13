@@ -11,10 +11,13 @@ import com.comphenix.protocol.ProtocolManager;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import eu.highgeek.highgeeksync.commands.ChannelCommand;
+import eu.highgeek.highgeeksync.commands.VirtualInventoryCommand;
 import eu.highgeek.highgeeksync.data.sql.controllers.DiscordLinkingCodeController;
 import eu.highgeek.highgeeksync.features.chat.ChannelManager;
 import eu.highgeek.highgeeksync.features.chat.ChannelMenuListener;
 import eu.highgeek.highgeeksync.features.serverstatus.ServerStatus;
+import eu.highgeek.highgeeksync.features.virtualinventories.InventoriesManager;
+import eu.highgeek.highgeeksync.features.virtualinventories.VirtualInventoriesListener;
 import eu.highgeek.highgeeksync.listeners.*;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import org.bukkit.Bukkit;
@@ -49,6 +52,8 @@ public final class HighgeekSync extends JavaPlugin {
     private static ProtocolManager protocolManager;
     @Getter
     private ServerStatus serverStatus;
+    @Getter
+    private static InventoriesManager inventoriesManager;
 
 	private SessionFactory sessionFactory;
 
@@ -66,12 +71,14 @@ public final class HighgeekSync extends JavaPlugin {
 
         //Init services
         HighgeekSync.channelManager = new ChannelManager(redisManager);
+        HighgeekSync.inventoriesManager = new InventoriesManager();
         this.serverStatus = new ServerStatus(redisManager);
 
         //Register events
         server.getPluginManager().registerEvents(new PlayerJoinListener(redisManager, channelManager),this);
         server.getPluginManager().registerEvents(new ChatListener(redisManager, channelManager),this);
         server.getPluginManager().registerEvents(new RedisChatListener(channelManager),this);
+        server.getPluginManager().registerEvents(new VirtualInventoriesListener(redisManager, inventoriesManager), this);
         server.getPluginManager().registerEvents(new ChannelMenuListener(channelManager),this);
         server.getPluginManager().registerEvents(new StatsListener(redisManager), this);
         server.getPluginManager().registerEvents(new PlayerLeaveListener(),this);
@@ -80,6 +87,7 @@ public final class HighgeekSync extends JavaPlugin {
 
 
         CommandAPI.registerCommand(ChannelCommand.class);
+        CommandAPI.registerCommand(VirtualInventoryCommand.class);
     }
 
     private void initHibernate(){

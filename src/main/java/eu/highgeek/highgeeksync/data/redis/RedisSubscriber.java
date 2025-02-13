@@ -5,9 +5,12 @@ import com.comphenix.protocol.PacketType;
 import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisChatEvent;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisEconomyPayEvent;
+import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisInventorySetEvent;
+import eu.highgeek.highgeeksync.features.virtualinventories.InventoriesManager;
 import eu.highgeek.highgeeksync.models.ChatMessage;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import eu.highgeek.highgeeksync.models.PlayerSettings;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.*;
 
@@ -38,11 +41,11 @@ public class RedisSubscriber extends JedisPubSub{
                 case "players":
                     firePlayersEvent(message);
                     return;
-                    /*
                 case "vinv":
                     fireVinvEvent(message);
                     //Main.logger.warning("Switch vinv hit: " + message);
                     return;
+                    /*
                 case "winv":
                     //Main.logger.warning("Switch winv hit: " + message);
                     return;
@@ -64,6 +67,26 @@ public class RedisSubscriber extends JedisPubSub{
         HighgeekSync.getInstance().logger.info("Unsubscribed from: " + pattern);
     }
 
+
+
+    public void fireVinvEvent(String message){
+        try {
+            String uuid = message.substring(message.lastIndexOf(":") - 36, message.lastIndexOf(":"));
+            int slotid = Integer.valueOf(message.substring(message.lastIndexOf(":")+1));
+
+            if (HighgeekSync.getInventoriesManager().getOpenedInventories().containsKey(uuid)){
+                HighgeekSync.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(HighgeekSync.getInstance(), new Runnable() {
+                    @Override
+                    public void run() {
+                        AsyncRedisInventorySetEvent redisInventorySetEvent = new AsyncRedisInventorySetEvent(message, uuid, slotid, false);
+                        Bukkit.getPluginManager().callEvent(redisInventorySetEvent);
+                    }
+                },0);
+            }
+        }catch (Exception exception){
+            HighgeekSync.getInstance().logger.warning("error: " + ExceptionUtils.getStackTrace(exception));
+        }
+    }
 
     public void fireEconomyEvent(String uuid){
         if (uuid.contains("pay")){

@@ -120,13 +120,25 @@
           <type>jar</type>
           <scope>compile</scope>
       </dependency>
+      <!--
+      <dependency>
+          <groupId>com.saicone</groupId>
+          <artifactId>nbt</artifactId>
+          <version>1.0.0</version>
+      </dependency>
+      <dependency>
+          <groupId>com.saicone.rtag</groupId>
+          <artifactId>rtag</artifactId>
+          <version>1.5.10-SNAPSHOT</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/libs/rtag-1.5.10-SNAPSHOT.jar</systemPath>
+      </dependency>
       <dependency>
           <groupId>com.saicone.rtag</groupId>
           <artifactId>rtag</artifactId>
           <version>1.5.5</version>
           <scope>compile</scope>
       </dependency>
-      <!-- Other modules -->
       <dependency>
           <groupId>com.saicone.rtag</groupId>
           <artifactId>rtag-block</artifactId>
@@ -144,7 +156,7 @@
           <artifactId>rtag-item</artifactId>
           <version>1.5.5</version>
           <scope>compile</scope>
-      </dependency>
+      </dependency>-->
       <dependency>
           <groupId>org.projectlombok</groupId>
           <artifactId>lombok</artifactId>
@@ -181,7 +193,7 @@
       <dependency>
         <groupId>com.willfp</groupId>
         <artifactId>eco</artifactId>
-        <version>6.73.4</version>
+        <version>6.75.2</version>
         <scope>provided</scope>
     </dependency>
       <dependency>
