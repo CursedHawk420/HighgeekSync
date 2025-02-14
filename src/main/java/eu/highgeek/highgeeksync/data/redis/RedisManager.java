@@ -7,6 +7,7 @@ import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import eu.highgeek.highgeeksync.models.PlayerSettings;
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import redis.clients.jedis.*;
 import eu.highgeek.highgeeksync.models.ChatMessage;
 import eu.highgeek.highgeeksync.features.chat.ChannelManager;
@@ -21,6 +22,9 @@ import java.util.stream.Collectors;
 public class RedisManager {
 
     private volatile boolean running = true;
+    @Getter
+    private boolean working;
+    private final BukkitTask subscriberTask;
     private final static String host = HighgeekSync.getInstance().config.getRedisIp();
     private final static int port = HighgeekSync.getInstance().config.getRedisPort();
 
@@ -46,7 +50,7 @@ public class RedisManager {
 
         this.subscriber = new RedisSubscriber(this);
 
-        HighgeekSync.getInstance().getServer().getScheduler().runTaskAsynchronously(HighgeekSync.getInstance(), () -> {
+        this.subscriberTask = HighgeekSync.getInstance().getServer().getScheduler().runTaskAsynchronously(HighgeekSync.getInstance(), () -> {
             startSubscriber();
         });
     }
@@ -63,9 +67,14 @@ public class RedisManager {
     private void startSubscriber(){
         while (running) {  // Infinite loop for reconnection handling
             try (Jedis jedis = new Jedis(host, port)) {
-                HighgeekSync.getInstance().logger.info("Connected to Redis, waiting for messages...");
-                jedis.psubscribe(subscriber, "*");
+                HighgeekSync.getInstance().logger.info("Connecting to redis...");
+                if(jedis.get("keepalive") != null) {
+                    working = true;
+                    HighgeekSync.getInstance().logger.info("Connected to Redis, waiting for messages...");
+                    jedis.psubscribe(subscriber, "*");
+                }
             } catch (Exception e) {
+                working = false;
                 if (!running) break; // Exit loop if shutting down
                 HighgeekSync.getInstance().logger.info("Connection lost, retrying in 100 ms...");
                 try {
@@ -80,6 +89,7 @@ public class RedisManager {
         if (subscriber != null) {
             subscriber.punsubscribe(); // Stop Jedis subscription
         }
+        subscriberTask.cancel();
         HighgeekSync.getInstance().logger.info("Subscriber has been shut down.");
     }
 

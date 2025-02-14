@@ -119,27 +119,9 @@ public class HighgeekPlayer {
     public void openDefaultInventory(){
         for (VirtualInventories vinv : virtualInventories){
             if(Objects.equals(vinv.getInventoryName(), "default") && !vinv.getWeb()){
-                openSpecificVirtualInventory(vinv);
+                HighgeekSync.getInventoriesManager().openSpecificVirtualInventory(vinv, player);
             }
         }
-    }
-
-    public void openSpecificVirtualInventory(VirtualInventories vinv){
-        Inventory inv = Bukkit.createInventory(new VirtualInventoryHolder(vinv.getInventoryUuid(), vinv, this), vinv.getSize(), "§3Virtual Chest " + vinv.getInventoryName());
-        HighgeekSync.getInstance().logger.warning("Opening inventory for player: " + player.getName());
-
-        String invPrefix = "vinv:"+vinv.getPlayerName()+":"+vinv.getInventoryUuid();
-
-        for (int i = 0; i < vinv.getSize() ; i++) {
-            inv.setItem(i, ItemStackAdapter.fromString(HighgeekSync.getRedisManager().getStringRedis(invPrefix + ":" + i)));
-        }
-        List<HighgeekPlayer> players = HighgeekSync.getInventoriesManager().getOpenedInventories().get(vinv.getInventoryUuid());
-        if(players == null){
-            players = new ArrayList<>();
-        }
-        players.add(this);
-        HighgeekSync.getInventoriesManager().getOpenedInventories().put(vinv.getInventoryUuid(), players);
-        player.openInventory(inv);
     }
 
     private void fistTimeLogin(){
