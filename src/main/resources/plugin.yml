@@ -1,6 +1,6 @@
 name: HighgeekSync
 version: '${project.version}'
-main: eu.highgeek.highgeeksync.Main
+main: eu.highgeek.highgeeksync.HighgeekSync
 api-version: '1.20'
 
-depend: [PlaceholderAPI, ProtocolLib, eco]
+#depend: [PlaceholderAPI, ProtocolLib, eco]
