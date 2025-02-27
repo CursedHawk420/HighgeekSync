@@ -2,6 +2,7 @@ package eu.highgeek.highgeeksync.features.virtualinventories;
 
 import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.data.redis.RedisManager;
+import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisInventoryDelEvent;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisInventorySetEvent;
 import eu.highgeek.highgeeksync.data.sql.entities.VirtualInventories;
 import eu.highgeek.highgeeksync.features.adapters.ItemStackAdapter;
@@ -32,48 +33,53 @@ public class VirtualInventoriesListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event){
-        Player player = (Player) event.getWhoClicked();
-        if(player.getOpenInventory().getTopInventory().getHolder() instanceof VirtualInventoryHolder vinv){
-            if(!redisManager.isWorking()){
-                event.setCancelled(true);
-                return;
-            }
-            if (event.getCurrentItem().getType() == Material.BARRIER){
-                event.setCancelled(true);
-                return;
-            }else {
-                InventoryAction action = event.getAction();
-                if(event.getClickedInventory().getHolder() instanceof VirtualInventoryHolder){
-                    if (action != InventoryAction.NOTHING && action == InventoryAction.MOVE_TO_OTHER_INVENTORY){
-                        redisManager.setStringRedis(vinv.getInvPrefix() + ":" + event.getSlot(),ItemStackAdapter.toString(new ItemStack(Material.AIR)));
-                    }
-                    else {
-                        event.setCancelled(true);
-                    }
+        try {
+            Player player = (Player) event.getWhoClicked();
+            if(player.getOpenInventory().getTopInventory().getHolder() instanceof VirtualInventoryHolder vinv){
+                if(!redisManager.isWorking()){
+                    event.setCancelled(true);
+                    return;
                 }
-                else
-                {
-                    final ItemStack item = event.getCurrentItem();
-                    final ItemStack[] oldvinv = player.getOpenInventory().getTopInventory().getContents();
-                    if (action != InventoryAction.NOTHING && action == InventoryAction.MOVE_TO_OTHER_INVENTORY){
-                        HighgeekSync.getInstance().server.getScheduler().scheduleSyncDelayedTask(HighgeekSync.getInstance(), new Runnable() {
-                            @Override
-                            public void run() {
-                                ItemStack[] newvinv = player.getOpenInventory().getTopInventory().getContents();
-                                for (int i = 0; i < newvinv.length; i++){
-                                    if (oldvinv[i] != newvinv[i]){
-                                        if (newvinv[i].getType() != Material.BARRIER){
-                                            redisManager.setStringRedis(vinv.getInvPrefix() + ":" + i,ItemStackAdapter.toString(newvinv[i]));
+                if (event.getCurrentItem().getType() == Material.BARRIER){
+                    event.setCancelled(true);
+                    return;
+                }else {
+                    InventoryAction action = event.getAction();
+                    if(event.getClickedInventory().getHolder() instanceof VirtualInventoryHolder){
+                        if (action != InventoryAction.NOTHING && action == InventoryAction.MOVE_TO_OTHER_INVENTORY){
+                            //redisManager.setStringRedis(vinv.getInvPrefix() + ":" + event.getSlot(),ItemStackAdapter.toString(new ItemStack(Material.AIR)));
+                            redisManager.deleteKey(vinv.getInvPrefix() + ":" + event.getSlot());
+                        }
+                        else {
+                            event.setCancelled(true);
+                        }
+                    }
+                    else
+                    {
+                        final ItemStack item = event.getCurrentItem();
+                        final ItemStack[] oldvinv = player.getOpenInventory().getTopInventory().getContents();
+                        if (action != InventoryAction.NOTHING && action == InventoryAction.MOVE_TO_OTHER_INVENTORY){
+                            HighgeekSync.getInstance().server.getScheduler().runTaskAsynchronously(HighgeekSync.getInstance(), new Runnable() {
+                                @Override
+                                public void run() {
+                                    ItemStack[] newvinv = player.getOpenInventory().getTopInventory().getContents();
+                                    for (int i = 0; i < newvinv.length; i++){
+                                        if (oldvinv[i] != newvinv[i]){
+                                            if (newvinv[i].getType() != Material.BARRIER){
+                                                redisManager.setStringRedis(vinv.getInvPrefix() + ":" + i,ItemStackAdapter.toString(newvinv[i]));
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        },2);
-                    }else {
-                        event.setCancelled(true);
+                            });
+                        }else {
+                            event.setCancelled(true);
+                        }
                     }
                 }
             }
+        }catch (Exception e){
+
         }
     }
 
@@ -84,6 +90,14 @@ public class VirtualInventoriesListener implements Listener {
         ) {
             ItemStack newItem = ItemStackAdapter.fromString(redisManager.getStringRedis(event.getRawMessage()));
             item.getOpenInventory().getTopInventory().setItem(event.getSlotId(), newItem);
+        }
+    }
+    @EventHandler
+    public void onRedisInventoryDelEvent(AsyncRedisInventoryDelEvent event){
+        List<Player> players = inventoriesManager.getOpenedInventories().get(event.getInvUuid());
+        for (var item : players
+        ) {
+            item.getOpenInventory().getTopInventory().setItem(event.getSlotId(), new ItemStack(Material.AIR));
         }
     }
 

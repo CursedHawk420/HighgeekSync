@@ -29,6 +29,9 @@ public class ItemStackAdapter {
     }
 
     public static ItemStack fromString(String snbt){
+        if (snbt == null || snbt.isBlank() || snbt.isEmpty()){
+            return new ItemStack(Material.AIR);
+        }
         Map<String, Object> readableMap = gson.fromJson(snbt, Map.class);
 
         if(readableMap.get("id").equals("minecraft:air")) {

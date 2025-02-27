@@ -120,4 +120,8 @@ public class RedisManager {
     public void jsonSet(String uuid, String toSet){
         unifiedJedis.jsonSet(uuid, toSet);
     }
+
+    public void deleteKey(String key){
+        unifiedJedis.del(key);
+    }
 }

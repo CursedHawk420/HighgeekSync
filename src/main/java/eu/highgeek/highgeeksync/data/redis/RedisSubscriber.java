@@ -1,12 +1,11 @@
 package eu.highgeek.highgeeksync.data.redis;
 
 
-import com.comphenix.protocol.PacketType;
 import eu.highgeek.highgeeksync.HighgeekSync;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisChatEvent;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisEconomyPayEvent;
+import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisInventoryDelEvent;
 import eu.highgeek.highgeeksync.data.redis.events.AsyncRedisInventorySetEvent;
-import eu.highgeek.highgeeksync.features.virtualinventories.InventoriesManager;
 import eu.highgeek.highgeeksync.models.ChatMessage;
 import eu.highgeek.highgeeksync.models.HighgeekPlayer;
 import eu.highgeek.highgeeksync.models.PlayerSettings;
@@ -24,37 +23,59 @@ public class RedisSubscriber extends JedisPubSub{
     @Override
     public void onPMessage(String pattern, String channel, String message) {
         //HighgeekSync.getInstance().logger.info("Received message: " + message + " on channel: " + channel);
-        if (channel.contains("set")){
-            //Main.logger.warning("onPMessage pattern: " + pattern + " channel: " + channel + " message: " + message);
-            //Main.logger.warning("Key: " + getKey(message));
-            String key = getKey(message);
-
-            switch (key){
-                case "chat":
-                    fireChatMessage(message);
-                    //Main.logger.warning("Switch chat hit: " + message);
-                    return;
-                case "economy":
-                    fireEconomyEvent(message);
-                    //Main.logger.warning("Switch economy hit: " + message);
-                    return;
-                case "players":
-                    firePlayersEvent(message);
-                    return;
-                case "vinv":
-                    fireVinvEvent(message);
-                    //Main.logger.warning("Switch vinv hit: " + message);
-                    return;
-                    /*
-                case "winv":
-                    //Main.logger.warning("Switch winv hit: " + message);
-                    return;
-                    //Main.logger.warning("Switch players hit: " + message);
-                    */
-                default:
-                    return;
-            }
+        switch (channel){
+            case "__keyevent@0__:set":
+                setCase(message);
+                return;
+            case "__keyevent@0__:del":
+                delCase(message);
+                return;
+            case "__keyevent@0__:expire":
+                expiredCase(message);
+                return;
+            default:
+                return;
         }
+    }
+
+    private void setCase(String message){
+        String key = getKey(message);
+        switch (key){
+            case "chat":
+                fireChatMessage(message);
+                //Main.logger.warning("Switch chat hit: " + message);
+                return;
+            case "economy":
+                fireEconomyEvent(message);
+                //Main.logger.warning("Switch economy hit: " + message);
+                return;
+            case "players":
+                firePlayersEvent(message);
+                return;
+            case "vinv":
+                fireVinvSetEvent(message);
+                //Main.logger.warning("Switch vinv hit: " + message);
+                return;
+            default:
+                return;
+        }
+    }
+
+    private void delCase(String message){
+        String key = getKey(message);
+        switch (key){
+            case "vinv":
+                fireVinvDelEvent(message);
+                return;
+            case "winv":
+                return;
+            default:
+                return;
+        }
+    }
+
+    private void expiredCase(String message){
+        delCase(message);
     }
 
     @Override
@@ -67,9 +88,27 @@ public class RedisSubscriber extends JedisPubSub{
         HighgeekSync.getInstance().logger.info("Unsubscribed from: " + pattern);
     }
 
+    public void fireVinvDelEvent(String message){
+        try {
+            String uuid = message.substring(message.lastIndexOf(":") - 36, message.lastIndexOf(":"));
+            int slotid = Integer.valueOf(message.substring(message.lastIndexOf(":")+1));
+
+            if (HighgeekSync.getInventoriesManager().getOpenedInventories().containsKey(uuid)){
+                HighgeekSync.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(HighgeekSync.getInstance(), new Runnable() {
+                    @Override
+                    public void run() {
+                        AsyncRedisInventoryDelEvent redisInventorySetEvent = new AsyncRedisInventoryDelEvent(message, uuid, slotid, false);
+                        Bukkit.getPluginManager().callEvent(redisInventorySetEvent);
+                    }
+                },0);
+            }
+        }catch (Exception exception){
+            HighgeekSync.getInstance().logger.warning("error: " + ExceptionUtils.getStackTrace(exception));
+        }
+    }
 
 
-    public void fireVinvEvent(String message){
+    public void fireVinvSetEvent(String message){
         try {
             String uuid = message.substring(message.lastIndexOf(":") - 36, message.lastIndexOf(":"));
             int slotid = Integer.valueOf(message.substring(message.lastIndexOf(":")+1));
